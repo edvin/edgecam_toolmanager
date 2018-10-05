@@ -130,6 +130,7 @@
         TL_TOOL_TYPE_MILL_ID = #{millTypeById},
         TL_TOOL_TYPE_HOLE_ID = #{holeTypeById},
         TL_UNITS_ID = #{unitsById},
+        TL_CENTRE_CUTTING = #{centreCutting},
         TL_TEETH = #{teeth},
         TL_DIAMETER = #{diameter},
         TL_CORNER_RADIUS = #{cornerRadius},
@@ -164,7 +165,8 @@
             TL_USER1,
             TL_USER2,
             TL_USER3,
-            TL_USER4)
+            TL_USER4,
+            TL_CENTRE_CUTTING)
         VALUES (
             null,
             #{description},
@@ -183,7 +185,8 @@
             #{manufacturer},
             #{itemId},
             #{url},
-            #{comment}
+            #{comment},
+            #{centreCutting}
         )
     </update>
 
@@ -198,8 +201,16 @@
         </where>
     </select>
 
-    <select id="tools" resultMap="Tool">
+    <select id="tools" resultMap="Tool" parameterType="ToolQuery">
         <include refid="selectTool"/>
+        <where>
+            <if test="category != null">
+                AND t.TL_TOOL_CATEGORY_ID = #{category.id}
+            </if>
+            <if test="!millTypes.isEmpty()">
+                AND t.TL_TOOL_TYPE_MILL_ID IN <foreach collection="millTypes" item="type" open="(" close=")" separator=",">#{type.id}</foreach>
+            </if>
+        </where>
         ORDER BY TL_TOOL_DESCRIPTION
     </select>
 

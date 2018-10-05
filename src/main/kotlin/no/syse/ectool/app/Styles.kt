@@ -1,21 +1,77 @@
 package no.syse.ectool.app
 
-import javafx.scene.text.FontWeight
-import tornadofx.Stylesheet
-import tornadofx.box
-import tornadofx.cssclass
-import tornadofx.px
+import javafx.scene.paint.Color
+import tornadofx.*
 
 class Styles : Stylesheet() {
     companion object {
-        val heading by cssclass()
+        val OK by cssclass()
+        val Cancel by cssclass()
     }
 
     init {
-        label and heading {
-            padding = box(10.px)
-            fontSize = 20.px
-            fontWeight = FontWeight.BOLD
+        root {
+            focusColor = Color.TRANSPARENT
+            faintFocusColor = Color.TRANSPARENT
+            backgroundColor += Color.WHITE
+            unsafe("-fx-control-inner-background-alt", "white")
+        }
+        comboBox {
+            borderColor += box(Color.BLACK)
+            backgroundRadius += box(0.px)
+            borderRadius += box(0.px)
+        }
+        tab {
+            backgroundRadius += box(0.px)
+            borderRadius += box(0.px)
+        }
+        toggleButton {
+            backgroundRadius += box(0.px)
+            borderRadius += box(0.px)
+        }
+        textField {
+            accentColor = Color.BLUE
+            borderColor += box(Color.BLACK)
+            backgroundRadius += box(0.px)
+            borderRadius += box(0.px)
+        }
+        scrollBar {
+            prefWidth = 20.px
+            prefHeight = 20.px
+            backgroundColor += Color.WHITE
+
+            thumb {
+                backgroundColor += c("#ededed")
+                backgroundRadius += box(0.px)
+
+                and(hover) {
+                    backgroundColor += c("#cecece")
+                }
+            }
+        }
+        buttonBar {
+            backgroundColor += Color.BLACK
+            button {
+                and(hover) {
+                    backgroundColor += Color.ORANGE
+                }
+                borderColor += box(Color.WHITE)
+            }
+            padding = box(3.px)
+        }
+        button {
+            and(OK) {
+                backgroundColor += Color.BLUE
+                textFill = Color.WHITE
+            }
+            and(Cancel) {
+                backgroundColor += Color.BLACK
+                textFill = Color.WHITE
+            }
+        }
+        tableView {
+            unsafe("-fx-selection-bar", "blue")
+            unsafe("-fx-selection-bar-non-focused", "blue")
         }
     }
 }

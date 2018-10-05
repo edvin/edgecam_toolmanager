@@ -3,6 +3,7 @@ package no.syse.ectool.controller
 import no.syse.ectool.domain.CutData
 import no.syse.ectool.domain.Material
 import no.syse.ectool.domain.Tool
+import no.syse.ectool.domain.ToolQuery
 import org.apache.ibatis.io.Resources
 import org.apache.ibatis.session.SqlSession
 import org.apache.ibatis.session.SqlSessionFactoryBuilder
@@ -11,6 +12,15 @@ import tornadofx.*
 class DBController : Controller() {
     private val mybatisConfig = Resources.getResourceAsStream("maps/mybatis.xml")
     private val sessionFactory = SqlSessionFactoryBuilder().build(mybatisConfig)
+
+    fun getTool(id: Int) = one<Tool>("Tool.toolById", id)
+
+    fun saveTool(tool: Tool) {
+        if (tool.id != null)
+            updateTool(tool)
+        else
+            insertTool(tool)
+    }
 
     fun updateTool(tool: Tool) {
         session {
@@ -62,7 +72,7 @@ class DBController : Controller() {
 
     fun listCutDataForTool(tool: Tool) = list<CutData>("CutData.listByTool", tool)
 
-    fun listTools() = list<Tool>("Tool.tools")
+    fun listTools(query: ToolQuery) = list<Tool>("Tool.tools", query)
     fun listMaterials() = list<Material>("Material.materials")
 
     private inline fun <reified T> list(key: String, param: Any? = null) = session { list<T>(key, param).observable() }
@@ -78,6 +88,4 @@ class DBController : Controller() {
     private fun SqlSession.insert(key: String, obj: Any): Int = insert(key, obj)
 
     private fun <T> session(op: SqlSession.() -> T) = sessionFactory.openSession().use(op)
-
-    fun getTool(id: Int) = one<Tool>("Tool.toolById", id)
 }

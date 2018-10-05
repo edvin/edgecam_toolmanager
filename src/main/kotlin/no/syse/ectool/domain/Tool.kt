@@ -1,7 +1,13 @@
 package no.syse.ectool.domain
 
-import javafx.beans.property.*
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleDoubleProperty
+import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.property.SimpleStringProperty
+import javafx.collections.FXCollections
+import javafx.scene.image.ImageView
 import tornadofx.*
+import java.nio.file.Paths
 
 class Tool {
     enum class Category(val id: Int) {
@@ -23,22 +29,30 @@ class Tool {
         FormedHole(8)
     }
 
-    enum class MillType(val id: Int) {
-        Endmill(0),
-        Bullnose(1),
-        Ballnose(2),
-        SlotDrill(3),
-        Taper(4),
-        Facemill(5),
-        TSlot(6),
-        Lollipop(7),
-        ThreadMill(8),
-        FormMill(9)
+    enum class MillType(val id: Int, val iconName: String) {
+        Endmill(0, "end_mill.png"),
+        Bullnose(1, "bull_nose.png"),
+        Ballnose(2, "ball_nose.png"),
+        SlotDrill(3, "slot_drill.png"),
+        Taper(4, "tap_taper_angle.png"),
+        Facemill(5, "face_mill.png"),
+        TSlot(6, "T_slot.png"),
+        Lollipop(7, "lollipop.png"),
+        ThreadMill(8, "tap.png"),
+        FormMill(9, "small_diameter.png")
     }
 
     enum class Units(val id: Int) {
         Inches(0),
         Millimeters(1)
+    }
+
+    companion object {
+        val millIconBase = Paths.get("C:/Program Files/Vero Software/Edgecam 2018 R2/cam/illustrate/Tool/")
+        fun icon(millType: MillType) = ImageView(millIconBase.resolve(millType.iconName).toUri().toURL().toExternalForm()).apply {
+            fitHeight = 48.0
+            fitWidth = 48.0
+        }
     }
 
     val idProperty = SimpleObjectProperty<Int>()
@@ -61,7 +75,7 @@ class Tool {
 
     val turretPositionProperty = SimpleObjectProperty<Int>()
     var turretPosition by turretPositionProperty
-    
+
     val gaugeZProperty = SimpleObjectProperty<Int>()
     var gaugeZ by gaugeZProperty
 
@@ -76,6 +90,9 @@ class Tool {
 
     val finishingProperty = SimpleBooleanProperty()
     var finishing by finishingProperty
+
+    val centreCuttingProperty = SimpleBooleanProperty()
+    var centreCutting by centreCuttingProperty
 
     val coolantProperty = SimpleBooleanProperty()
     var coolant by coolantProperty
@@ -143,13 +160,13 @@ class Tool {
     }
 
     fun getCategoryById() = category?.id
-    
+
     fun setUnitsById(id: Int) {
         units = Units.values().find { it.id == id }
     }
 
     fun getUnitsById() = units.id
-    
+
     fun setHoleTypeById(id: Int) {
         holeType = HoleType.values().find { it.id == id }
     }
@@ -165,6 +182,39 @@ class Tool {
     override fun toString(): String {
         return "Tool(id=$id, description=$description, category=$category, holeType=$holeType, millType=$millType, units=$units, turretPosition=$turretPosition, gaugeZ=$gaugeZ, zoffset=$zoffset, reach=$reach, roughing=$roughing, finishing=$finishing, coolant=$coolant, offset=$offset, teeth=$teeth, diameter=$diameter, cornerRadius=$cornerRadius, fluteLength=$fluteLength, threadPitch=$threadPitch, tipAngle=$tipAngle, shankLength=$shankLength, shankWidth=$shankWidth, manufacturer=$manufacturer, itemId=$itemId, url=$url, comment=$comment)"
     }
+}
 
+class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
+    val id = bind(Tool::idProperty)
+    val description = bind(Tool::descriptionProperty)
+    val category = bind(Tool::categoryProperty)
+    val holeType = bind(Tool::holeTypeProperty)
+    val millType = bind(Tool::millTypeProperty)
+    val units = bind(Tool::unitsProperty)
+    val turretPosition = bind(Tool::turretPositionProperty)
+    val gaugeZ = bind(Tool::gaugeZProperty)
+    val zoffset = bind(Tool::zoffsetProperty)
+    val reach = bind(Tool::reachProperty)
+    val roughing = bind(Tool::roughingProperty)
+    val finishing = bind(Tool::finishingProperty)
+    val centreCutting = bind(Tool::centreCuttingProperty)
+    val coolant = bind(Tool::coolantProperty)
+    val offset = bind(Tool::offsetProperty)
+    val teeth = bind(Tool::teethProperty)
+    val diameter = bind(Tool::diameterProperty)
+    val cornerRadius = bind(Tool::cornerRadiusProperty)
+    val fluteLength = bind(Tool::fluteLengthProperty)
+    val threadPitch = bind(Tool::threadPitchProperty)
+    val tipAngle = bind(Tool::tipAngleProperty)
+    val shankLength = bind(Tool::shankLengthProperty)
+    val shankWidth = bind(Tool::shankWidthProperty)
+    val manufacturer = bind(Tool::manufacturerProperty)
+    val itemId = bind(Tool::itemIdProperty)
+    val url = bind(Tool::urlProperty)
+    val comment = bind(Tool::commentProperty)
+}
 
+class ToolQuery() {
+    var category: Tool.Category? = null
+    val millTypes = FXCollections.observableSet<Tool.MillType>()
 }

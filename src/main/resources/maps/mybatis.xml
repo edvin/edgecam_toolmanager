@@ -6,6 +6,7 @@
     <typeAliases>
         <typeAlias type="no.syse.ectool.domain.Material" alias="Material"/>
         <typeAlias type="no.syse.ectool.domain.Tool" alias="Tool"/>
+        <typeAlias type="no.syse.ectool.domain.ToolQuery" alias="ToolQuery"/>
         <typeAlias type="no.syse.ectool.domain.CutData" alias="CutData"/>
     </typeAliases>
     <environments default="development">
