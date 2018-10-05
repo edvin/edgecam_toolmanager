@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CutData">
+
+    <resultMap id="CutData" type="CutData">
+        <result column="TCD_TOOL_CUT_DATA_ID" property="id"/>
+        <result column="TCD_TOOL_DESC" property="tool.description"/>
+        <result column="TCD_APPLICATION_TYPE_ID" property="applicationId"/>
+        <result column="TCD_MATERIAL_DESC" property="material.description"/>
+        <result column="TCD_FEEDRATE" property="feedrate"/>
+        <result column="TCD_PLUNGE_FEED" property="plungeFeedrate"/>
+        <result column="TCD_SPEED" property="speed"/>
+        <result column="TCD_STEPOVER" property="stepover"/>
+    </resultMap>
+
+    <select id="listByTool" resultMap="CutData" parameterType="Tool">
+      select * from TS_TOOL_CUT_DATA where TCD_TOOL_DESC = #{description}
+    </select>
+
+    <update id="update" parameterType="CutData">
+        UPDATE TS_TOOL_CUT_DATA SET
+            TCD_FEEDRATE = #{feedrate},
+            TCD_PLUNGE_FEED = #{plungeFeedrate},
+            TCD_SPEED = #{speed},
+            TCD_STEPOVER = #{stepover}
+        WHERE TCD_TOOL_DESC = #{tool.description}
+        AND TCD_MATERIAL_DESC = #{material.description}
+        AND TCD_APPLICATION_TYPE_ID = #{applicationId}
+    </update>
+
+    <insert id="insert" parameterType="CutData" useGeneratedKeys="true" keyProperty="id" keyColumn="TCD_TOOL_CUT_DATA_ID">
+        INSERT INTO TS_TOOL_CUT_DATA (
+          TCD_JOB_DESC,
+          TCD_APPLICATION_TYPE_ID,
+          TCD_MATERIAL_DESC,
+          TCD_TOOL_DESC,
+          TCD_FEEDRATE,
+          TCD_PLUNGE_FEED,
+          TCD_SPEED,
+        ) VALUES (
+          '&lt;All Kit&gt;',
+          #{applicationId},
+          #{material.description},
+          #{tool.description},
+          #{feedrate},
+          #{plungeFeedrate},
+          #{speed}
+        )
+    </insert>
+
+</mapper>

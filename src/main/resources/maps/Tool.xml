@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Tool">
+    <resultMap id="Tool" type="Tool">
+        <result column="TL_TOOL_ID" property="id"/>
+        <result column="TL_TOOL_DESCRIPTION" property="description"/>
+        <result column="TL_TOOL_CATEGORY_ID" property="categoryById"/>
+        <result column="TL_TOOL_TYPE_MILL_ID" property="millTypeById"/>
+        <result column="TL_TOOL_TYPE_HOLE_ID" property="holeTypeById"/>
+        <result column="TL_UNITS_ID" property="unitsById"/>
+        <result column="TL_TEETH" property="teeth"/>
+        <result column="TL_DIAMETER" property="diameter"/>
+        <result column="TL_CORNER_RADIUS" property="cornerRadius"/>
+        <result column="TL_FLUTE_LENGTH" property="fluteLength"/>
+        <result column="TL_THREAD" property="threadPitch"/>
+        <result column="TL_TIP_ANGLE" property="tipAngle"/>
+        <result column="TL_SHANK_LENGTH" property="shankLength"/>
+        <result column="TL_SHANK_WIDTH" property="shankWidth"/>
+        <result column="TL_USER1" property="manufacturer"/>
+        <result column="TL_USER2" property="itemId"/>
+        <result column="TL_USER3" property="url"/>
+        <result column="TL_USER4" property="comment"/>
+        <result column="MNT_TURRET_POSITION" property="turretPosition"/>
+        <result column="MNT_GAUGE_Z" property="gaugeZ"/>
+        <result column="MNT_Z_OFFSET" property="zoffset"/>
+        <result column="MNT_TOOL_OFFSET" property="offset"/>
+        <result column="MNT_REACH" property="reach"/>
+        <result column="MNT_ROUGHING_TOOL" property="roughingInt"/>
+        <result column="MNT_FINISHING_TOOL" property="finishingInt"/>
+        <result column="MNT_COOLANT" property="coolantInt"/>
+    </resultMap>
+
+    <sql id="selectTool">
+        SELECT t.*,
+        m.MNT_TURRET_POSITION,
+        m.MNT_GAUGE_Z,
+        m.MNT_TOOL_OFFSET,
+        m.MNT_Z_OFFSET,
+        m.MNT_REACH,
+        m.MNT_ROUGHING_TOOL,
+        m.MNT_FINISHING_TOOL,
+        m.MNT_COOLANT,
+        m.MNT_TOOL_OFFSET
+        FROM TS_TOOL t
+        LEFT OUTER JOIN TS_MOUNTING m ON m.MNT_TOOL_ID = t.TL_TOOL_ID AND m.MNT_JOB_DESC = '&lt;All Kit&gt;'
+    </sql>
+
+    <!-- Update the properties for the All Kit job with the position saved in the tool (we pretend there is only one job) -->
+    <update id="updateAllKitMounting" parameterType="Tool">
+      UPDATE TS_MOUNTING SET
+          MNT_TURRET_POSITION = #{turretPosition},
+          MNT_GAUGE_Z = #{gaugeZ},
+          MNT_Z_OFFSET = #{zoffset},
+          MNT_TOOL_OFFSET = #{offset},
+          MNT_REACH = #{reach},
+          MNT_ROUGHING_TOOL = #{roughingInt},
+          MNT_FINISHING_TOOL = #{finishingInt},
+          MNT_COOLANT = #{coolantInt}
+      WHERE MNT_TOOL_ID = #{id}
+      AND MNT_JOB_DESC = '&lt;All Kit&gt;'
+    </update>
+
+    <!-- Insert default values and set the turret position and other properties for this tool in the All Kit job -->
+    <insert id="insertAllKitMounting" parameterType="Tool">
+        INSERT INTO TS_MOUNTING (
+        MNT_TOOL_ID,
+        MNT_TURRET_POSITION,
+        MNT_DESCRIPTION,
+        MNT_JOB_DESC,
+        MNT_COMMENT,
+        MNT_LOADING_ANGLE,
+        MNT_SPINDLE_DIR_ID,
+        MNT_TOOL_OFFSET,
+        MNT_MACHINING_MODE_ID,
+        MNT_TOOL_LIFE,
+        MNT_COLOUR,
+        MNT_LAYER,
+        MNT_LAST_MATERIAL,
+        MNT_GAUGE_Z,
+        MNT_Z_OFFSET,
+        MNT_REACH,
+        MNT_TURRET_ID,
+        MNT_CREATED,
+        MNT_ROUGHING_TOOL,
+        MNT_FINISHING_TOOL,
+        MNT_HOLDER_OFFSET_ORIGIN,
+        MNT_COOLANT,
+        MNT_COOLANT_TAPS
+        ) VALUES (
+          #{id},
+          #{turretPosition},
+          #{description},
+          '&lt;All Kit&gt;',
+          #{description},
+          90,
+          0,
+          #{offset},
+          0,
+          100,
+          0,
+          0,
+          'Aluminium - Cast alloy (6 {37} Si)',
+          #{gaugeZ},
+          #{zoffset},
+          #{reach},
+          0,
+          CURRENT_TIMESTAMP,
+          #{roughingInt},
+          #{finishingInt},
+          0,
+          #{coolantInt},
+          7)
+    </insert>
+
+    <update id="updateTool" parameterType="Tool">
+        UPDATE TS_TOOL SET
+        TL_INSERT_DESC = null,
+        TL_TOOL_DESCRIPTION = #{description},
+        TL_TOOL_CATEGORY_ID = #{categoryById},
+        TL_TOOL_TYPE_MILL_ID = #{millTypeById},
+        TL_TOOL_TYPE_HOLE_ID = #{holeTypeById},
+        TL_UNITS_ID = #{unitsById},
+        TL_TEETH = #{teeth},
+        TL_DIAMETER = #{diameter},
+        TL_CORNER_RADIUS = #{cornerRadius},
+        TL_FLUTE_LENGTH = #{fluteLength},
+        TL_THREAD = #{threadPitch},
+        TL_TIP_ANGLE = #{tipAngle},
+        TL_SHANK_LENGTH = #{shankLength},
+        TL_SHANK_WIDTH = #{shankWidth},
+        TL_USER1 = #{manufacturer},
+        TL_USER2 = #{itemId},
+        TL_USER3 = #{url},
+        TL_USER4 = #{comment}
+        WHERE TL_TOOL_ID = #{id}
+    </update>
+
+    <update id="insertTool" parameterType="Tool" useGeneratedKeys="true" keyProperty="id" keyColumn="TL_TOOL_ID">
+        INSERT INTO TS_TOOL (
+            TL_INSERT_DESC,
+            TL_TOOL_DESCRIPTION,
+            TL_TOOL_CATEGORY_ID,
+            TL_TOOL_TYPE_MILL_ID,
+            TL_TOOL_TYPE_HOLE_ID,
+            TL_UNITS_ID,
+            TL_TEETH,
+            TL_DIAMETER,
+            TL_CORNER_RADIUS,
+            TL_FLUTE_LENGTH,
+            TL_THREAD,
+            TL_TIP_ANGLE,
+            TL_SHANK_LENGTH,
+            TL_SHANK_WIDTH,
+            TL_USER1,
+            TL_USER2,
+            TL_USER3,
+            TL_USER4)
+        VALUES (
+            null,
+            #{description},
+            #{categoryById},
+            #{millTypeById},
+            #{holeTypeById},
+            #{unitsById},
+            #{teeth},
+            #{diameter},
+            #{cornerRadius},
+            #{fluteLength},
+            #{threadPitch},
+            #{tipAngle},
+            #{shankLength},
+            #{shankWidth},
+            #{manufacturer},
+            #{itemId},
+            #{url},
+            #{comment}
+        )
+    </update>
+
+    <update id="updateCutDataReference" parameterType="Map">
+        UPDATE TS_TOOL_CUT_DATA SET TL_TOOL_DESCRIPTION = #{new} WHERE TL_TOOL_DESCRIPTION = #{old}
+    </update>
+
+    <select id="toolById" resultMap="Tool">
+        <include refid="selectTool"/>
+        <where>
+            TL_TOOL_ID = #{id}
+        </where>
+    </select>
+
+    <select id="tools" resultMap="Tool">
+        <include refid="selectTool"/>
+        ORDER BY TL_TOOL_DESCRIPTION
+    </select>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Material">
+
+    <resultMap id="Material" type="Material">
+        <result column="MAT_MATERIAL_ID" property="id"/>
+        <result column="MAT_MATERIAL_DESCRIPTION" property="description"/>
+        <result column="MAT_COMMENT" property="comment"/>
+        <result column="MAT_FAMILY" property="family"/>
+    </resultMap>
+
+    <select id="materialById" resultMap="Material">
+      select * from TS_MATERIAL where MAT_MATERIAL_ID = #{id}
+    </select>
+
+    <select id="materials" resultMap="Material">
+      select * from TS_MATERIAL ORDER BY MAT_MATERIAL_DESCRIPTION
+    </select>
+
+</mapper>

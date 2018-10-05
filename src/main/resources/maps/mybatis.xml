@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias type="no.syse.ectool.domain.Material" alias="Material"/>
+        <typeAlias type="no.syse.ectool.domain.Tool" alias="Tool"/>
+        <typeAlias type="no.syse.ectool.domain.CutData" alias="CutData"/>
+    </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="net.sourceforge.jtds.jdbc.Driver"/>
+                <property name="url" value="jdbc:jtds:sqlserver://./Sample_Toolstore_2018R2;namedPipe=true;instance=LOCALDB#SH2D098D"/>
+                <property name="username" value="toolstore_user"/>
+                <property name="password" value="SomeRandomString"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="maps/Tool.xml"/>
+        <mapper resource="maps/Material.xml"/>
+        <mapper resource="maps/CutData.xml"/>
+    </mappers>
+</configuration>
