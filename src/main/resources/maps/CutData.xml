@@ -30,6 +30,10 @@
         AND TCD_APPLICATION_TYPE_ID = #{applicationId}
     </update>
 
+    <delete id="deleteForTool" parameterType="Tool">
+        DELETE FROM TS_TOOL_CUT_DATA WHERE TCD_TOOL_DESC = #{description}
+    </delete>
+
     <insert id="insert" parameterType="CutData" useGeneratedKeys="true" keyProperty="id" keyColumn="TCD_TOOL_CUT_DATA_ID">
         INSERT INTO TS_TOOL_CUT_DATA (
           TCD_JOB_DESC,
@@ -39,6 +43,7 @@
           TCD_FEEDRATE,
           TCD_PLUNGE_FEED,
           TCD_SPEED,
+          TCD_STEPOVER
         ) VALUES (
           '&lt;All Kit&gt;',
           #{applicationId},
@@ -46,7 +51,8 @@
           #{tool.description},
           #{feedrate},
           #{plungeFeedrate},
-          #{speed}
+          #{speed},
+          #{stepover}
         )
     </insert>
 

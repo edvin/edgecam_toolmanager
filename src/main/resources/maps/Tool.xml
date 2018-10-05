@@ -47,6 +47,14 @@
         LEFT OUTER JOIN TS_MOUNTING m ON m.MNT_TOOL_ID = t.TL_TOOL_ID AND m.MNT_JOB_DESC = '&lt;All Kit&gt;'
     </sql>
 
+    <delete id="deleteTool" parameterType="Tool">
+        DELETE FROM TS_TOOL WHERE TL_TOOL_ID = #{id}
+    </delete>
+
+    <delete id="deleteMounting" parameterType="Tool">
+        DELETE FROM TS_MOUNTING WHERE MNT_TOOL_ID = #{id}
+    </delete>
+
     <!-- Update the properties for the All Kit job with the position saved in the tool (we pretend there is only one job) -->
     <update id="updateAllKitMounting" parameterType="Tool">
       UPDATE TS_MOUNTING SET

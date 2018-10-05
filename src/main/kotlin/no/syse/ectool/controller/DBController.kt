@@ -31,6 +31,15 @@ class DBController : Controller() {
         }
     }
 
+    fun deleteTool(tool: Tool) {
+        session {
+            delete("Tool.deleteMounting", tool)
+            delete("CutData.deleteForTool", tool)
+            delete("Tool.deleteTool", tool)
+            commit()
+        }
+    }
+
     fun insertTool(tool: Tool) {
         session {
             update("Tool.insertTool", tool)
