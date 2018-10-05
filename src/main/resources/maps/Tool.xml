@@ -191,7 +191,7 @@
     </update>
 
     <update id="updateCutDataReference" parameterType="Map">
-        UPDATE TS_TOOL_CUT_DATA SET TL_TOOL_DESCRIPTION = #{new} WHERE TL_TOOL_DESCRIPTION = #{old}
+        UPDATE TS_TOOL_CUT_DATA SET TL_TOOL_DESC = #{new} WHERE TL_TOOL_DESC = #{old}
     </update>
 
     <select id="toolById" resultMap="Tool">

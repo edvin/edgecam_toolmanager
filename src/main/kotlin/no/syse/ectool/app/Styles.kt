@@ -1,5 +1,6 @@
 package no.syse.ectool.app
 
+import javafx.geometry.Pos
 import javafx.scene.paint.Color
 import tornadofx.*
 
@@ -15,11 +16,24 @@ class Styles : Stylesheet() {
             faintFocusColor = Color.TRANSPARENT
             backgroundColor += Color.WHITE
             unsafe("-fx-control-inner-background-alt", "white")
+            borderColor += box(Color.BLACK)
+            backgroundRadius += box(0.px)
+            borderRadius += box(0.px)
         }
         comboBox {
             borderColor += box(Color.BLACK)
             backgroundRadius += box(0.px)
             borderRadius += box(0.px)
+        }
+        checkBox {
+            borderColor += box(Color.BLACK)
+            backgroundRadius += box(0.px)
+            borderRadius += box(0.px)
+            padding = box(3.px, 0.px, 3.px, 4.px)
+            box {
+                backgroundColor += Color.WHITE
+                alignment = Pos.CENTER
+            }
         }
         tab {
             backgroundRadius += box(0.px)

@@ -7,10 +7,15 @@ import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
 import no.syse.ectool.events.ToolModifiedEvent
 import tornadofx.*
+import kotlin.reflect.KClass
 
 class MillToolMainEditor : Fragment() {
     val db: DBController by inject()
     val tool: ToolModel by inject()
+
+    companion object {
+        var lastOpenTab: KClass<out UIComponent>? = ToolEditorTechnology::class
+    }
 
     init {
         titleProperty.bind(tool.description)
@@ -27,6 +32,16 @@ class MillToolMainEditor : Fragment() {
                 tab<ToolEditorGeneral>()
                 tab<ToolEditorTechnology>()
                 tab<ToolEditorFeedsAndSpeeds>()
+
+                selectionModel.selectedItemProperty().onChange {
+                    lastOpenTab = it?.content?.uiComponent<UIComponent>()?.javaClass?.kotlin
+                }
+
+                lastOpenTab?.let {
+                    selectionModel.select(tabs.find { tab ->
+                        tab.content?.uiComponent<UIComponent>()?.javaClass?.kotlin == it
+                    })
+                }
             }
         }
         bottom {

@@ -27,7 +27,9 @@ class MillToolList : View() {
                 isFocusTraversable = false
                 trimWhitespace()
                 tools.filterWhen(textProperty()) { q, t ->
-                    t.toString().toLowerCase().contains(q, ignoreCase = true)
+                    val content = t.toString().toLowerCase().trim()
+                    val queryParts = q.split(" ").filter { it.isNotEmpty() }
+                    queryParts.asSequence().map { content.contains(it) }.all { it }
                 }
                 shortcut("ESC") {
                     if (isFocused) {
@@ -48,9 +50,11 @@ class MillToolList : View() {
                 column("Description", Tool::descriptionProperty) {
                     cellFormat {
                         text = it
-                        graphic = Tool.icon(rowItem.millType).apply {
-                            fitHeight = 16.0
-                            fitWidth = 16.0
+                        rowItem.millType?.let {
+                            graphic = Tool.icon(it).apply {
+                                fitHeight = 16.0
+                                fitWidth = 16.0
+                            }
                         }
                     }
                 }

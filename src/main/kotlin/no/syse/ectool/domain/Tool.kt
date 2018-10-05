@@ -50,8 +50,8 @@ class Tool {
     companion object {
         val millIconBase = Paths.get("C:/Program Files/Vero Software/Edgecam 2018 R2/cam/illustrate/Tool/")
         fun icon(millType: MillType) = ImageView(millIconBase.resolve(millType.iconName).toUri().toURL().toExternalForm()).apply {
-            fitHeight = 48.0
-            fitWidth = 48.0
+            fitHeight = 32.0
+            fitWidth = 32.0
         }
     }
 

@@ -9,18 +9,6 @@ class ToolEditorGeneral : Fragment("General") {
 
     override val root = form {
         fieldset {
-            field("Type") {
-                combobox(tool.millType, Tool.MillType.values().toList()) {
-                    cellFormat(true) {
-                        text = it.name
-                        graphic = Tool.icon(it).apply {
-                            fitHeight = 24.0
-                            fitWidth = 24.0
-                        }
-                    }
-                }
-            }
-
             field("Description") {
                 textfield(tool.description)
             }
