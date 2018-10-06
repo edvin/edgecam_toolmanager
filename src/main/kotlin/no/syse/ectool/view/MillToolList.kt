@@ -3,6 +3,8 @@ package no.syse.ectool.view
 import javafx.geometry.Pos
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCode
+import javafx.scene.paint.Color
+import no.syse.ectool.app.Styles
 import no.syse.ectool.app.ToolApp
 import no.syse.ectool.controller.DBController
 import no.syse.ectool.domain.Tool
@@ -27,10 +29,16 @@ class MillToolList : View() {
                 tooltip("ESC enters the filter field. ESC while filter field is active clears filter.")
                 isFocusTraversable = false
                 trimWhitespace()
+                // Cache keywords and trimmed content instead of calculating once for each tool when filtering
+                val keywords = ArrayList<String>()
+                textProperty().onChange {
+                    keywords.clear()
+                    keywords.addAll(text.split(" ").filter { t -> t.isNotEmpty() })
+                }
+
                 tools.filterWhen(textProperty()) { q, t ->
                     val content = t.toString().toLowerCase().trim()
-                    val queryParts = q.split(" ").filter { it.isNotEmpty() }
-                    queryParts.asSequence().map { content.contains(it) }.all { it }
+                    keywords.map { content.contains(it) }.all { it }
                 }
                 shortcut("ESC") {
                     if (isFocused) {
@@ -59,10 +67,16 @@ class MillToolList : View() {
                         }
                     }
                 }
-                column("Diameter", Tool::diameterProperty)
-                column("Reach", Tool::reachProperty)
+                column("Diameter", Tool::diameterProperty).cellFormat {
+                    text = "$it${rowItem.mmOrInch.value}"
+                }
+                column("Reach", Tool::reachProperty).cellFormat {
+                    text = "$it${rowItem.mmOrInch.value}"
+                }
                 column("Flutes", Tool::teethProperty)
-                column("Flute Length", Tool::fluteLengthProperty)
+                column("Flute Length", Tool::fluteLengthProperty).cellFormat {
+                    text = "$it${rowItem.mmOrInch.value}"
+                }
                 column("Centre Cutting", Tool::centreCuttingProperty) {
                     cellFormat {
                         alignment = Pos.CENTER
@@ -84,6 +98,7 @@ class MillToolList : View() {
         }
         bottom {
             hbox(3) {
+                addClass(Styles.toolbar)
                 Tool.MillType.values().forEach { millType ->
                     val toggleGroup = ToggleGroup()
                     togglebutton(millType.description, toggleGroup) {

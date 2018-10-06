@@ -1,8 +1,10 @@
 package no.syse.ectool.view
 
 import javafx.beans.property.SimpleObjectProperty
+import javafx.event.EventTarget
 import javafx.geometry.Orientation
 import javafx.scene.Node
+import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.paint.Color
 import javafx.util.converter.IntegerStringConverter
@@ -15,7 +17,6 @@ import tornadofx.*
 class ToolEditorTechnology : Fragment("Technology") {
     val tool: ToolModel by inject()
 
-    private val mmOrInch = tool.units.stringBinding { if (it == Tool.Units.Inches) "inch" else "mm" }
     private val helpImage = SimpleObjectProperty<Image>()
 
     override val root = form {
@@ -30,10 +31,13 @@ class ToolEditorTechnology : Fragment("Technology") {
                                     text = it.name
                                     graphic = ToolApp.icon(it, 24)
                                 }
+                                helpIcon("Tool_type_mill.png")
+                                requestFocus()
                             }
                         }
-                        field("Number of teeth") {
+                        field("Flutes") {
                             spinner(1, 12, property = tool.teeth) {
+                                isEditable = true
                                 prefWidth = 75.0
                                 helpIcon("number_of_teeth.png")
                             }
@@ -51,7 +55,9 @@ class ToolEditorTechnology : Fragment("Technology") {
                     }
                     row {
                         field("Units") {
-                            combobox(tool.units, Tool.Units.values().toList())
+                            combobox(tool.units, Tool.Units.values().toList()) {
+                                helpIcon("blank.png")
+                            }
                         }
                         field("Coolant") {
                             checkbox(property = tool.coolant) {
@@ -67,7 +73,6 @@ class ToolEditorTechnology : Fragment("Technology") {
                                 prefColumnCount = 2
                                 helpIcon("mill_offset.png")
                             }
-                            label(mmOrInch)
                         }
                         field("Centre cutting") {
                             checkbox(property = tool.centreCutting) {
@@ -85,87 +90,99 @@ class ToolEditorTechnology : Fragment("Technology") {
         }
         pane {
             style {
-                paddingVertical = 10
+                padding = box(2.px, 0.px, 10.px, 0.px)
                 borderWidth += box(1.px)
                 borderColor += box(Color.TRANSPARENT, Color.TRANSPARENT, Color.BLACK, Color.TRANSPARENT)
             }
         }
         fieldset("Geometry") {
-            gridpane {
-                hgap = 50.0
-                row {
-                    field("Diameter") {
-                        textfield(tool.diameter, NumberStringConverter()) {
-                            prefColumnCount = 4
+            hbox(20) {
+                gridpane {
+                    hgap = 50.0
+                    row {
+                        field("Diameter") {
+                            textfield(tool.diameter, NumberStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("diameter.png")
+                            }
+                            label(tool.mmOrInch)
                         }
-                        label(mmOrInch)
+                        field("Gauge Z") {
+                            textfield(tool.gaugeZ, IntegerStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("mill_Z_gauge.png")
+                            }
+                            label(tool.mmOrInch)
+                        }
                     }
-                    field("Gauge Z") {
-                        textfield(tool.gaugeZ, IntegerStringConverter()) {
-                            prefColumnCount = 4
+                    row {
+                        field("Corner Radius") {
+                            textfield(tool.cornerRadius, NumberStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("corner_radius.png")
+                            }
+                            label(tool.mmOrInch)
                         }
-                        label(mmOrInch)
+                    }
+                    row {
+                        field("Flute length") {
+                            textfield(tool.fluteLength, NumberStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("flute_length.png")
+                            }
+                            label(tool.mmOrInch)
+                        }
+                        field("Reach") {
+                            textfield(tool.reach, IntegerStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("reach.png")
+                            }
+                            label(tool.mmOrInch)
+                        }
+                    }
+                    row {
+                        field("Thread pitch") {
+                            textfield(tool.threadPitch, NumberStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("thread_pitch.png")
+                            }
+                            label(tool.mmOrInch)
+                        }
+                        field("Tip angle") {
+                            textfield(tool.tipAngle, NumberStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("tip_angle.png")
+                            }
+                            label("degrees")
+                        }
+                    }
+                    row {
+                        field("Shank width") {
+                            textfield(tool.shankWidth, NumberStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("shank_definition_diameter.png")
+                            }
+                            label(tool.mmOrInch)
+                        }
+                        field("Shank length") {
+                            textfield(tool.shankLength, NumberStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("shank_definition_shank_length.png")
+                            }
+                            label(tool.mmOrInch)
+                        }
                     }
                 }
-                row {
-                    field("Corner Radius") {
-                        textfield(tool.cornerRadius, NumberStringConverter()) {
-                            prefColumnCount = 4
-                            helpIcon("corner_radius.png")
-                        }
-                        label(mmOrInch)
+                stackpane {
+                    setMinSize(220.0, 200.0)
+                    style {
+                        backgroundColor += c("98bedc")
+                        borderColor += box(Color.BLACK)
                     }
-                }
-                row {
-                    field("Flute length") {
-                        textfield(tool.fluteLength, NumberStringConverter()) {
-                            prefColumnCount = 4
-                            helpIcon("flute_length.png")
-                        }
-                        label(mmOrInch)
-                    }
-                    field("Z Gauge") {
-                        textfield(tool.gaugeZ, IntegerStringConverter()) {
-                            prefColumnCount = 4
-                            helpIcon("mill_Z_gauge.png")
-                        }
-                        label(mmOrInch)
-                    }
-                    field("Reach") {
-                        textfield(tool.reach, IntegerStringConverter()) {
-                            prefColumnCount = 4
-                            helpIcon("mill_Z_gauge.png")
-                        }
-                        label(mmOrInch)
-                    }
-                }
-                row {
-                    field("Thread pitch") {
-                        textfield(tool.threadPitch, NumberStringConverter()) {
-                            prefColumnCount = 4
-                        }
-                        label(mmOrInch)
-                    }
-                    field("Tip angle") {
-                        textfield(tool.tipAngle, NumberStringConverter()) {
-                            prefColumnCount = 4
-                            helpIcon("tip_angle.png")
-                        }
-                        label("degrees")
-                    }
-                }
-                row {
-                    field("Shank width") {
-                        textfield(tool.shankWidth, NumberStringConverter()) {
-                            prefColumnCount = 4
-                        }
-                        label(mmOrInch)
-                    }
-                    field("Shank length") {
-                        textfield(tool.shankLength, NumberStringConverter()) {
-                            prefColumnCount = 4
-                        }
-                        label(mmOrInch)
+                    add(tool.toolGraphics.value!!)
+                    tool.toolGraphics.onChange {
+                        clear()
+                        add(it!!)
                     }
                 }
             }
@@ -174,8 +191,15 @@ class ToolEditorTechnology : Fragment("Technology") {
     }
 
     private fun Node.helpIcon(iconName: String, library: String = "Tool") {
+        // Trigger help icon on focus
         focusedProperty().onChange {
             helpImage.value = ToolApp.icon(iconName, 32, library).image
+        }
+        // Focus follows mouse
+        setOnMouseEntered {
+            requestFocus()
+            // Spinner needs a little help to select the text
+            ((this as? Spinner<*>)?.childrenUnmodifiable?.first() as? TextField)?.selectAll()
         }
     }
 }

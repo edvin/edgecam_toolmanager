@@ -8,15 +8,18 @@ class Styles : Stylesheet() {
     companion object {
         val OK by cssclass()
         val Cancel by cssclass()
+        val toolbar by cssclass()
     }
 
     init {
+        toolbar {
+            backgroundColor += Color.LIGHTGREY
+        }
         root {
             focusColor = Color.TRANSPARENT
             faintFocusColor = Color.TRANSPARENT
             backgroundColor += Color.WHITE
             unsafe("-fx-control-inner-background-alt", "white")
-            borderColor += box(Color.BLACK)
             backgroundRadius += box(0.px)
             borderRadius += box(0.px)
             accentColor = Color.BLUE

@@ -5,9 +5,12 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
-import javafx.scene.image.ImageView
+import javafx.scene.Group
+import javafx.scene.paint.Color
+import javafx.scene.paint.CycleMethod
+import javafx.scene.paint.LinearGradient
+import javafx.scene.paint.Stop
 import tornadofx.*
-import java.nio.file.Paths
 
 class Tool {
     enum class Category(val id: Int) {
@@ -71,7 +74,7 @@ class Tool {
     val gaugeZProperty = SimpleObjectProperty<Int>()
     var gaugeZ by gaugeZProperty
 
-    val zoffsetProperty = SimpleObjectProperty<Int>()
+    val zoffsetProperty = SimpleObjectProperty<Int>(1)
     var zoffset by zoffsetProperty
 
     val reachProperty = SimpleObjectProperty<Int>()
@@ -128,6 +131,7 @@ class Tool {
     val commentProperty = SimpleStringProperty()
     var comment by commentProperty
 
+    val mmOrInch = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "\"" else "mm" }
 
     fun setRoughingInt(i: Int?) {
         roughing = i == 1
@@ -182,7 +186,8 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
     val category = bind(Tool::categoryProperty)
     val holeType = bind(Tool::holeTypeProperty)
     val millType = bind(Tool::millTypeProperty)
-    val units = bind(Tool::unitsProperty)
+    // Reflect changes to mmOrInch directly
+    val units = bind(Tool::unitsProperty, autocommit = true)
     val turretPosition = bind(Tool::turretPositionProperty)
     val gaugeZ = bind(Tool::gaugeZProperty)
     val zoffset = bind(Tool::zoffsetProperty)
@@ -204,6 +209,98 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
     val itemId = bind(Tool::itemIdProperty)
     val url = bind(Tool::urlProperty)
     val comment = bind(Tool::commentProperty)
+    val mmOrInch = select { it.mmOrInch }
+
+    val tipHeight = doubleBinding(tipAngle, diameter) {
+        val angle = (tipAngle.value ?: 0.0).toDouble()
+        if (angle > 0) {
+            val angle2 = (180 - angle) / 2
+            val area = areaOfTriangleBySideAngles(angle, angle2, angle2)
+
+            // TODO: Calculate height
+            20.0
+        } else {
+            0.0
+        }
+    }
+
+    private fun areaOfTriangleBySideAngles(a: Double, b: Double, c: Double): Double {
+        return areaOfTriangleBySideLength(Math.sin(a), Math.sin(b), Math.sin(c))
+    }
+
+    private fun areaOfTriangleBySideLength(a: Double, b: Double, c: Double): Double {
+        val s = (a + b + c) / 2
+        return s * ((s - a)*(s - b)*(s-c))
+    }
+
+    val toolGraphics = objectBinding(this, diameter, fluteLength, shankLength, shankWidth, tipAngle) {
+        toolGraphics()
+    }
+
+    private fun toolGraphics() = Group().apply {
+        val frameHeight = 190
+        val frameWidth = 200
+        val hcenter = frameWidth / 2
+
+        // Determine scale factor
+
+        // Scale values
+        val flD = (diameter.value ?: 1).toDouble()
+        val shD = (shankWidth.value ?: 1).toDouble()
+        val flLength = (fluteLength.value ?: 1).toDouble()
+        val shLength = (shankLength.value ?: 1).toDouble()
+
+        // Shank
+        rectangle(hcenter - (shD / 2), 0, shD, shLength) {
+            val stops = listOf(
+                    Stop(0.0, c("#b1b1b1")),
+                    Stop(0.01, c("#d2d2d2")),
+                    Stop(0.02, c("#f3f3f3")),
+                    Stop(0.03, c("#ffffff")),
+                    Stop(0.8, c("#858585")),
+                    Stop(1.0, c("#dbdbdb"))
+            )
+            fill = LinearGradient(0.0, 0.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE, stops)
+        }
+
+        // Flutes
+        rectangle(hcenter - (flD / 2), shLength, flD, flLength) {
+            val stops = listOf(
+                    Stop(0.0, c("#2f77c7")),
+                    Stop(0.01, c("#5aa0df")),
+                    Stop(0.02, c("#84c9f6")),
+                    Stop(0.03, c("#84c9f6")),
+                    Stop(0.8, c("#145cac")),
+                    Stop(1.0, c("#1986fe"))
+            )
+            fill = LinearGradient(0.0, 0.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE, stops)
+
+        }
+
+        // Tip angle
+        val tipH = tipHeight.value ?: 0.0
+
+        if (tipH > 0) {
+            val y = shLength + flLength
+
+            polygon(
+                    hcenter - (flD / 2), y,
+                    hcenter, y + tipH,
+                    hcenter + (flD / 2), y
+            ) {
+                fill = Color.GREEN
+            }
+        }
+
+        // Scale to fit the frame while keeping aspect rate
+        val totalHeight = flLength + shLength + tipH
+        val maxWidth = Math.max(flD, shD)
+
+        val scaleFactor = Math.min(frameHeight / totalHeight, frameWidth / maxWidth)
+
+        scaleX = scaleFactor
+        scaleY = scaleFactor
+    }
 }
 
 class ToolQuery() {
