@@ -123,6 +123,13 @@ class ToolEditorTechnology : Fragment("Technology") {
                             }
                             label(tool.mmOrInch)
                         }
+                        field("Reach") {
+                            textfield(tool.reach, IntegerStringConverter()) {
+                                prefColumnCount = 4
+                                helpIcon("reach.png")
+                            }
+                            label(tool.mmOrInch)
+                        }
                     }
                     row {
                         field("Flute length") {
@@ -132,12 +139,12 @@ class ToolEditorTechnology : Fragment("Technology") {
                             }
                             label(tool.mmOrInch)
                         }
-                        field("Reach") {
-                            textfield(tool.reach, IntegerStringConverter()) {
+                        field("Tip angle") {
+                            textfield(tool.tipAngle, NumberStringConverter()) {
                                 prefColumnCount = 4
-                                helpIcon("reach.png")
+                                helpIcon("tip_angle.png")
                             }
-                            label(tool.mmOrInch)
+                            label("degrees")
                         }
                     }
                     row {
@@ -148,12 +155,9 @@ class ToolEditorTechnology : Fragment("Technology") {
                             }
                             label(tool.mmOrInch)
                         }
-                        field("Tip angle") {
-                            textfield(tool.tipAngle, NumberStringConverter()) {
-                                prefColumnCount = 4
-                                helpIcon("tip_angle.png")
-                            }
-                            label("degrees")
+                        field("Tip length") {
+                            label(tool.tipLength)
+                            label(tool.mmOrInch)
                         }
                     }
                     row {

@@ -211,26 +211,25 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
     val comment = bind(Tool::commentProperty)
     val mmOrInch = select { it.mmOrInch }
 
-    val tipHeight = doubleBinding(tipAngle, diameter) {
+    val tipLength = doubleBinding(tipAngle, diameter) {
         val angle = (tipAngle.value ?: 0.0).toDouble()
         if (angle > 0) {
-            val angle2 = (180 - angle) / 2
-            val area = areaOfTriangleBySideAngles(angle, angle2, angle2)
-
-            // TODO: Calculate height
-            20.0
+            val d = diameter.value?.toDouble() ?: 0.0
+            val radius: Double = d / 2.0
+            round(radius / Math.tan(Math.toRadians(angle)), 3)
         } else {
             0.0
         }
     }
 
-    private fun areaOfTriangleBySideAngles(a: Double, b: Double, c: Double): Double {
-        return areaOfTriangleBySideLength(Math.sin(a), Math.sin(b), Math.sin(c))
-    }
+    private fun round(value: Double, places: Int): Double {
+        var v = value
+        if (places < 0) throw IllegalArgumentException()
 
-    private fun areaOfTriangleBySideLength(a: Double, b: Double, c: Double): Double {
-        val s = (a + b + c) / 2
-        return s * ((s - a)*(s - b)*(s-c))
+        val factor = Math.pow(10.0, places.toDouble()).toLong()
+        v = v * factor
+        val tmp = Math.round(v)
+        return tmp.toDouble() / factor
     }
 
     val toolGraphics = objectBinding(this, diameter, fluteLength, shankLength, shankWidth, tipAngle) {
@@ -274,11 +273,10 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
                     Stop(1.0, c("#1986fe"))
             )
             fill = LinearGradient(0.0, 0.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE, stops)
-
         }
 
         // Tip angle
-        val tipH = tipHeight.value ?: 0.0
+        val tipH = tipLength.value ?: 0.0
 
         if (tipH > 0) {
             val y = shLength + flLength
@@ -288,7 +286,15 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
                     hcenter, y + tipH,
                     hcenter + (flD / 2), y
             ) {
-                fill = Color.GREEN
+                val stops = listOf(
+                        Stop(0.0, c("#2f77c7")),
+                        Stop(0.01, c("#5aa0df")),
+                        Stop(0.02, c("#84c9f6")),
+                        Stop(0.03, c("#84c9f6")),
+                        Stop(0.8, c("#145cac")),
+                        Stop(1.0, c("#1986fe"))
+                )
+                fill = LinearGradient(0.0, 0.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE, stops)
             }
         }
 
