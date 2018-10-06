@@ -19,6 +19,7 @@ class Styles : Stylesheet() {
             borderColor += box(Color.BLACK)
             backgroundRadius += box(0.px)
             borderRadius += box(0.px)
+            accentColor = Color.BLUE
         }
         comboBox {
             borderColor += box(Color.BLACK)
@@ -44,7 +45,6 @@ class Styles : Stylesheet() {
             borderRadius += box(0.px)
         }
         textField {
-            accentColor = Color.BLUE
             borderColor += box(Color.BLACK)
             backgroundRadius += box(0.px)
             borderRadius += box(0.px)
@@ -86,6 +86,13 @@ class Styles : Stylesheet() {
         tableView {
             unsafe("-fx-selection-bar", "blue")
             unsafe("-fx-selection-bar-non-focused", "blue")
+        }
+
+        s(incrementArrowButton, decrementArrowButton) {
+            backgroundRadius += box(0.px)
+            borderRadius += box(0.px)
+            borderColor += box(Color.BLACK)
+            backgroundColor += Color.TRANSPARENT
         }
     }
 }

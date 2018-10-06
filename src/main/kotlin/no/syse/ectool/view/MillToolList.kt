@@ -3,6 +3,7 @@ package no.syse.ectool.view
 import javafx.geometry.Pos
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCode
+import no.syse.ectool.app.ToolApp
 import no.syse.ectool.controller.DBController
 import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
@@ -51,7 +52,7 @@ class MillToolList : View() {
                     cellFormat {
                         text = it
                         rowItem.millType?.let {
-                            graphic = Tool.icon(it).apply {
+                            graphic = ToolApp.icon(it).apply {
                                 fitHeight = 16.0
                                 fitWidth = 16.0
                             }
@@ -85,8 +86,8 @@ class MillToolList : View() {
             hbox(3) {
                 Tool.MillType.values().forEach { millType ->
                     val toggleGroup = ToggleGroup()
-                    togglebutton(millType.toString(), toggleGroup) {
-                        graphic = Tool.icon(millType)
+                    togglebutton(millType.description, toggleGroup) {
+                        graphic = ToolApp.icon(millType)
                         isSelected = millType == Tool.MillType.Endmill
 
                         selectedProperty().onChange {

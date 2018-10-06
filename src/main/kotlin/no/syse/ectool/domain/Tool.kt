@@ -29,30 +29,22 @@ class Tool {
         FormedHole(8)
     }
 
-    enum class MillType(val id: Int, val iconName: String) {
-        Endmill(0, "end_mill.png"),
-        Bullnose(1, "bull_nose.png"),
-        Ballnose(2, "ball_nose.png"),
-        SlotDrill(3, "slot_drill.png"),
-        Taper(4, "tap_taper_angle.png"),
-        Facemill(5, "face_mill.png"),
-        TSlot(6, "T_slot.png"),
-        Lollipop(7, "lollipop.png"),
-        ThreadMill(8, "tap.png"),
-        FormMill(9, "small_diameter.png")
+    enum class MillType(val id: Int, val iconName: String, val description: String) {
+        Endmill(0, "end_mill.png", "Endmill"),
+        Bullnose(1, "bull_nose.png", "Bullnose"),
+        Ballnose(2, "ball_nose.png", "Ballnose"),
+        SlotDrill(3, "slot_drill.png", "Slot Drill"),
+        Taper(4, "tap_taper_angle.png", "Taper"),
+        Facemill(5, "face_mill.png", "Facemill"),
+        TSlot(6, "T_slot.png", "T-Slot"),
+        Lollipop(7, "lollipop.png", "Lollipop"),
+        ThreadMill(8, "tap.png", "Threadmill"),
+        FormMill(9, "small_diameter.png", "Formed Mill")
     }
 
     enum class Units(val id: Int) {
         Inches(0),
         Millimeters(1)
-    }
-
-    companion object {
-        val millIconBase = Paths.get("C:/Program Files/Vero Software/Edgecam 2018 R2/cam/illustrate/Tool/")
-        fun icon(millType: MillType) = ImageView(millIconBase.resolve(millType.iconName).toUri().toURL().toExternalForm()).apply {
-            fitHeight = 32.0
-            fitWidth = 32.0
-        }
     }
 
     val idProperty = SimpleObjectProperty<Int>()
