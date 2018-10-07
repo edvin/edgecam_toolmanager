@@ -3,6 +3,7 @@ package no.syse.ectool.view
 import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventTarget
 import javafx.geometry.Orientation
+import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.scene.image.Image
@@ -36,9 +37,9 @@ class ToolEditorTechnology : Fragment("Technology") {
                             }
                         }
                         field("Flutes") {
-                            spinner(1, 12, property = tool.teeth) {
+                            spinner(1, 12, property = tool.teeth, enableScroll = true) {
                                 isEditable = true
-                                prefWidth = 75.0
+                                prefWidth = 70.0
                                 helpIcon("number_of_teeth.png")
                             }
                         }
@@ -65,8 +66,9 @@ class ToolEditorTechnology : Fragment("Technology") {
                             }
                         }
                         field("ATC pos / Offset") {
-                            textfield(tool.turretPosition, IntegerStringConverter()) {
-                                prefColumnCount = 3
+                            spinner(1, 12, property = tool.turretPosition, enableScroll = true, amountToStepBy = 1) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("code_id.png")
                             }
                             textfield(tool.offset, IntegerStringConverter()) {
@@ -96,20 +98,22 @@ class ToolEditorTechnology : Fragment("Technology") {
             }
         }
         fieldset("Geometry") {
-            hbox(20) {
+            hbox(10) {
                 gridpane {
-                    hgap = 50.0
+                    hgap = 40.0
                     row {
                         field("Diameter") {
-                            textfield(tool.diameter, NumberStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(0.0, 120.0, property = tool.diameter, enableScroll = true, amountToStepBy = 1.0) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("diameter.png")
                             }
                             label(tool.mmOrInch)
                         }
                         field("Gauge Z") {
-                            textfield(tool.gaugeZ, IntegerStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(0, 300, property = tool.gaugeZ, enableScroll = true, amountToStepBy = 1) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("mill_Z_gauge.png")
                             }
                             label(tool.mmOrInch)
@@ -117,15 +121,17 @@ class ToolEditorTechnology : Fragment("Technology") {
                     }
                     row {
                         field("Corner Radius") {
-                            textfield(tool.cornerRadius, NumberStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(0.0, 5.0, property = tool.cornerRadius, enableScroll = true, amountToStepBy = 0.1) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("corner_radius.png")
                             }
                             label(tool.mmOrInch)
                         }
                         field("Reach") {
-                            textfield(tool.reach, IntegerStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(1.0, 200.0, property = tool.reach, enableScroll = true, amountToStepBy = 1.0) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("reach.png")
                             }
                             label(tool.mmOrInch)
@@ -133,15 +139,17 @@ class ToolEditorTechnology : Fragment("Technology") {
                     }
                     row {
                         field("Flute length") {
-                            textfield(tool.fluteLength, NumberStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(1.0, 200.0, property = tool.fluteLength, enableScroll = true, amountToStepBy = 1.0) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("flute_length.png")
                             }
                             label(tool.mmOrInch)
                         }
                         field("Tip angle") {
-                            textfield(tool.tipAngle, NumberStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(0.0, 180.0, property = tool.tipAngle, enableScroll = true, amountToStepBy = 1.0) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("tip_angle.png")
                             }
                             label("degrees")
@@ -149,9 +157,15 @@ class ToolEditorTechnology : Fragment("Technology") {
                     }
                     row {
                         field("Thread pitch") {
-                            textfield(tool.threadPitch, NumberStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(0.0, 100.0, property = tool.threadPitch, enableScroll = true, amountToStepBy = 0.1) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("thread_pitch.png")
+                                val enable = booleanBinding(tool, tool.millType, tool.holeType) {
+                                    listOf(Tool.MillType.FormMill, Tool.MillType.ThreadMill).contains(millType.value)
+                                    || holeType == Tool.HoleType.Tap
+                                }
+                                enableWhen(enable)
                             }
                             label(tool.mmOrInch)
                         }
@@ -162,15 +176,17 @@ class ToolEditorTechnology : Fragment("Technology") {
                     }
                     row {
                         field("Shank width") {
-                            textfield(tool.shankWidth, NumberStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(1.0, 120.0, property = tool.shankWidth, enableScroll = true, amountToStepBy = 1.0) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("shank_definition_diameter.png")
                             }
                             label(tool.mmOrInch)
                         }
                         field("Shank length") {
-                            textfield(tool.shankLength, NumberStringConverter()) {
-                                prefColumnCount = 4
+                            spinner(1.0, 200.0, property = tool.shankLength, enableScroll = true, amountToStepBy = 1.0) {
+                                isEditable = true
+                                prefWidth = 70.0
                                 helpIcon("shank_definition_shank_length.png")
                             }
                             label(tool.mmOrInch)

@@ -13,6 +13,12 @@ class Styles : Stylesheet() {
     }
 
     init {
+        maintabs {
+            tabMinHeight = 40.px
+            tabMaxHeight = 40.px
+            tabMinWidth = 85.px
+            tabMaxWidth = 85.px
+        }
         toolbar {
             backgroundColor += Color.LIGHTGREY
         }
@@ -97,6 +103,9 @@ class Styles : Stylesheet() {
             borderRadius += box(0.px)
             borderColor += box(Color.BLACK)
             backgroundColor += Color.TRANSPARENT
+        }
+        textField and disabled {
+            backgroundColor += Color.LIGHTGREY
         }
     }
 }

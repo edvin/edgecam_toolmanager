@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.scene.Group
-import javafx.scene.paint.Color
 import javafx.scene.paint.CycleMethod
 import javafx.scene.paint.LinearGradient
 import javafx.scene.paint.Stop
@@ -77,7 +76,7 @@ class Tool {
     val zoffsetProperty = SimpleObjectProperty<Int>(1)
     var zoffset by zoffsetProperty
 
-    val reachProperty = SimpleObjectProperty<Int>()
+    val reachProperty = SimpleDoubleProperty()
     var reach by reachProperty
 
     val roughingProperty = SimpleBooleanProperty()
@@ -262,17 +261,19 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
             fill = LinearGradient(0.0, 0.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE, stops)
         }
 
+        val stops = listOf(
+                Stop(0.0, c("#2f77c7")),
+                Stop(0.01, c("#5aa0df")),
+                Stop(0.02, c("#84c9f6")),
+                Stop(0.03, c("#84c9f6")),
+                Stop(0.8, c("#145cac")),
+                Stop(1.0, c("#1986fe"))
+        )
+        val fluteFill = LinearGradient(0.0, 0.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE, stops)
+
         // Flutes
         rectangle(hcenter - (flD / 2), shLength, flD, flLength) {
-            val stops = listOf(
-                    Stop(0.0, c("#2f77c7")),
-                    Stop(0.01, c("#5aa0df")),
-                    Stop(0.02, c("#84c9f6")),
-                    Stop(0.03, c("#84c9f6")),
-                    Stop(0.8, c("#145cac")),
-                    Stop(1.0, c("#1986fe"))
-            )
-            fill = LinearGradient(0.0, 0.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE, stops)
+            fill = fluteFill
         }
 
         // Tip angle
@@ -281,24 +282,12 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
         if (tipH > 0) {
             val y = shLength + flLength
 
-            polygon(
-                    hcenter - (flD / 2), y,
-                    hcenter, y + tipH,
-                    hcenter + (flD / 2), y
-            ) {
-                val stops = listOf(
-                        Stop(0.0, c("#2f77c7")),
-                        Stop(0.01, c("#5aa0df")),
-                        Stop(0.02, c("#84c9f6")),
-                        Stop(0.03, c("#84c9f6")),
-                        Stop(0.8, c("#145cac")),
-                        Stop(1.0, c("#1986fe"))
-                )
-                fill = LinearGradient(0.0, 0.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE, stops)
+            polygon(hcenter - (flD / 2), y, hcenter, y + tipH, hcenter + (flD / 2), y) {
+                fill = fluteFill
             }
         }
 
-        // Scale to fit the frame while keeping aspect rate
+        // Scale to fit the frame while keeping aspect ratio
         val totalHeight = flLength + shLength + tipH
         val maxWidth = Math.max(flD, shD)
 
