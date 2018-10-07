@@ -14,6 +14,9 @@ import no.syse.ectool.app.ToolApp
 import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
 import tornadofx.*
+import javafx.scene.control.SpinnerValueFactory
+
+
 
 class ToolEditorTechnology : Fragment("Technology") {
     val tool: ToolModel by inject()
@@ -21,7 +24,7 @@ class ToolEditorTechnology : Fragment("Technology") {
     private val helpImage = SimpleObjectProperty<Image>()
 
     private val enableTipEditing = booleanBinding(tool, tool.millType, tool.holeType) {
-        listOf(Tool.MillType.FormMill, Tool.MillType.ThreadMill).contains(millType.value)
+        listOf(Tool.MillType.FormMill, Tool.MillType.ThreadMill, Tool.MillType.Taper).contains(millType.value)
                 || holeType.value != null
     }
 
@@ -124,105 +127,97 @@ class ToolEditorTechnology : Fragment("Technology") {
         }
         pane {
             style {
-                padding = box(2.px, 0.px, 10.px, 0.px)
                 borderWidth += box(1.px)
                 borderColor += box(Color.TRANSPARENT, Color.TRANSPARENT, Color.BLACK, Color.TRANSPARENT)
             }
         }
         fieldset("Geometry") {
-            hbox(10) {
-                gridpane {
-                    hgap = 40.0
-                    row {
-                        field("Diameter") {
-                            spinner(0.0, 120.0, property = tool.diameter, enableScroll = true, amountToStepBy = 1.0) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("diameter.png")
-                            }
-                            label(tool.mmOrInch)
+            paddingTop = 10
+            hbox(30) {
+                vbox {
+                    field("Diameter") {
+                        spinner(0.0, 120.0, property = tool.diameter, enableScroll = true, amountToStepBy = 1.0) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("diameter.png")
+
                         }
-                        field("Reach") {
-                            spinner(1.0, 200.0, property = tool.reach, enableScroll = true, amountToStepBy = 1.0) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("reach.png")
-                            }
-                            label(tool.mmOrInch)
-                        }
+                        label(tool.mmOrInch)
                     }
-                    row {
-                        field("Corner Radius") {
-                            spinner(0.0, 5.0, property = tool.cornerRadius, enableScroll = true, amountToStepBy = 0.1) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("corner_radius.png")
-                            }
-                            label(tool.mmOrInch)
-                            enableWhen(enableCornerRadius)
+                    field("Corner Radius") {
+                        spinner(0.0, 5.0, property = tool.cornerRadius, enableScroll = true, amountToStepBy = 0.1) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("corner_radius.png")
                         }
-                        field("Gauge Z") {
-                            spinner(0, 300, property = tool.gaugeZ, enableScroll = true, amountToStepBy = 1) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("mill_Z_gauge.png")
-                            }
-                            label(tool.mmOrInch)
-                        }
+                        label(tool.mmOrInch)
+                        enableWhen(enableCornerRadius)
                     }
-                    row {
-                        field("Flute length") {
-                            spinner(1.0, 200.0, property = tool.fluteLength, enableScroll = true, amountToStepBy = 1.0) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("flute_length.png")
-                            }
-                            label(tool.mmOrInch)
+                    field("Flute length") {
+                        spinner(1.0, 200.0, property = tool.fluteLength, enableScroll = true, amountToStepBy = 1.0) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("flute_length.png")
                         }
-                        field("Tip angle") {
-                            spinner(0.0, 180.0, property = tool.tipAngle, enableScroll = true, amountToStepBy = 1.0) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("tip_angle.png")
-                            }
-                            label("°")
-                            enableWhen(enableTipEditing)
-                        }
+                        label(tool.mmOrInch)
                     }
-                    row {
-                        field("Shank length") {
-                            spinner(1.0, 200.0, property = tool.shankLength, enableScroll = true, amountToStepBy = 1.0) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("shank_definition_shank_length.png")
-                            }
-                            label(tool.mmOrInch)
+                    field("Shank length") {
+                        spinner(1.0, 200.0, property = tool.shankLength, enableScroll = true, amountToStepBy = 1.0) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("shank_definition_shank_length.png")
                         }
-                        field("Tip length") {
-                            (inputContainer as HBox).alignment = Pos.CENTER_LEFT
-                            label(tool.tipLength)
-                            label(tool.mmOrInch)
-                            enableWhen(enableTipEditing)
-                        }
+                        label(tool.mmOrInch)
                     }
-                    row {
-                        field("Shank width") {
-                            spinner(1.0, 120.0, property = tool.shankWidth, enableScroll = true, amountToStepBy = 1.0) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("shank_definition_diameter.png")
-                            }
-                            label(tool.mmOrInch)
+                    field("Shank width") {
+                        spinner(1.0, 120.0, property = tool.shankWidth, enableScroll = true, amountToStepBy = 1.0) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("shank_definition_diameter.png")
                         }
-                        field("Thread pitch") {
-                            spinner(0.0, 100.0, property = tool.threadPitch, enableScroll = true, amountToStepBy = 0.1) {
-                                isEditable = true
-                                prefWidth = 70.0
-                                helpIcon("thread_pitch.png")
-                            }
-                            label(tool.mmOrInch)
-                            enableWhen(enableThreadPitch)
+                        label(tool.mmOrInch)
+                    }
+                }
+                vbox {
+                    field("Reach") {
+                        spinner(1.0, 200.0, property = tool.reach, enableScroll = true, amountToStepBy = 1.0) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("reach.png")
                         }
+                        label(tool.mmOrInch)
+                    }
+                    field("Gauge height") {
+                        spinner(0, 300, property = tool.gaugeZ, enableScroll = true, amountToStepBy = 1) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("mill_Z_gauge.png")
+                        }
+                        label(tool.mmOrInch)
+                    }
+                    field("Tip angle") {
+                        spinner(0.0, 180.0, property = tool.tipAngle, enableScroll = true, amountToStepBy = 1.0) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("tip_angle.png")
+                        }
+                        label("°")
+                        enableWhen(enableTipEditing)
+                    }
+                    field("Tip length") {
+                        (inputContainer as HBox).alignment = Pos.CENTER_LEFT
+                        label(tool.tipLength)
+                        label(tool.mmOrInch)
+                        enableWhen(enableTipEditing)
+                    }
+                    field("Thread pitch") {
+                        spinner(0.0, 100.0, property = tool.threadPitch, enableScroll = true, amountToStepBy = 0.1) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            helpIcon("thread_pitch.png")
+                        }
+                        label(tool.mmOrInch)
+                        enableWhen(enableThreadPitch)
                     }
                 }
                 stackpane {
@@ -243,15 +238,39 @@ class ToolEditorTechnology : Fragment("Technology") {
     }
 
     private fun Node.helpIcon(iconName: String, library: String = "Tool") {
-        // Trigger help icon on focus
-        focusedProperty().onChange {
-            helpImage.value = ToolApp.icon(iconName, 32, library).image
+        // Trigger help icon and select text on focus
+        focusedProperty().onChange { focused ->
+            if (focused) {
+                helpImage.value = ToolApp.icon(iconName, 32, library).image
+                (this as? TextField)?.selectAll()
+                // Spinner needs a little extra push
+                (this as? Spinner<*>)?.let {
+                    runLater {
+                        it.editor?.selectAll()
+                    }
+                }
+            }
         }
+
+        // Make the spinner commit it's value on manual edit
+        (this as? Spinner<*>)?.editor?.textProperty()?.onChange { commitEditorText(this) }
+
         // Focus follows mouse
         setOnMouseEntered {
             requestFocus()
-            // Spinner needs a little help to select the text
-            ((this as? Spinner<*>)?.childrenUnmodifiable?.first() as? TextField)?.selectAll()
+        }
+    }
+
+    private fun <T> commitEditorText(spinner: Spinner<T>) {
+        if (!spinner.isEditable) return
+        val text = spinner.editor.text
+        val valueFactory = spinner.valueFactory
+        if (valueFactory != null) {
+            val converter = valueFactory.converter
+            if (converter != null) {
+                val value = converter.fromString(text)
+                valueFactory.value = value
+            }
         }
     }
 }
