@@ -13,11 +13,11 @@ import javafx.scene.paint.Stop
 import tornadofx.*
 
 class Tool {
-    enum class Category(val id: Int) {
-        Milling(0),
-        Turning(1),
-        Hole(2),
-        Probe(3)
+    enum class Category(val id: Int, val iconName: String, val library: String) {
+        Milling(0, "end_mill.png", "Tool"),
+        Turning(1, "TurnPart.png", "FeatureFinder"),
+        Hole(2, "drill.png", "Tool"),
+        Probe(3, "tool_type_probe.png", "Tool")
     }
 
     enum class HoleType(val id: Int) {

@@ -9,6 +9,7 @@ class Styles : Stylesheet() {
         val OK by cssclass()
         val Cancel by cssclass()
         val toolbar by cssclass()
+        val maintabs by cssclass()
     }
 
     init {

@@ -14,11 +14,17 @@ import no.syse.ectool.events.ToolModifiedEvent
 import org.controlsfx.control.textfield.TextFields
 import tornadofx.*
 
-class MillToolList : View() {
-    val query = ToolQuery().apply { category = Tool.Category.Milling }
+class ToolList : Fragment() {
+    val category: Tool.Category by param()
+    val query = ToolQuery().apply { category = this@ToolList.category }
     val db: DBController by inject()
     val tools = SortedFilteredList<Tool>()
     private var ignoreUpdate = false
+
+    init {
+        title = category.name
+        icon = ToolApp.icon(category)
+    }
 
     override val root = borderpane {
         top {
