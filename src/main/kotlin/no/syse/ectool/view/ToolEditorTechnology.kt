@@ -14,8 +14,6 @@ import no.syse.ectool.app.ToolApp
 import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
 import tornadofx.*
-import javafx.scene.control.SpinnerValueFactory
-
 
 
 class ToolEditorTechnology : Fragment("Technology") {

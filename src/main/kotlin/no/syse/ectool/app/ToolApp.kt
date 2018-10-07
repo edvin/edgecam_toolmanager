@@ -1,7 +1,10 @@
 package no.syse.ectool.app
 
+import javafx.collections.FXCollections
 import javafx.scene.image.ImageView
 import javafx.stage.Stage
+import no.syse.ectool.controller.DBController
+import no.syse.ectool.domain.Material
 import no.syse.ectool.domain.Tool
 import no.syse.ectool.view.MainView
 import tornadofx.*
@@ -10,6 +13,8 @@ import java.nio.file.Paths
 
 
 class ToolApp : App(MainView::class, Styles::class) {
+    val db: DBController by inject()
+
     init {
         Workspace.defaultCloseable = false
     }
@@ -17,6 +22,7 @@ class ToolApp : App(MainView::class, Styles::class) {
     override fun start(stage: Stage) {
         stage.icons.add(icon("Tool_type_mill.png", 16).image)
         super.start(stage)
+        Cache.materials.asyncItems { db.listMaterials() }
     }
 
     companion object {
@@ -33,7 +39,11 @@ class ToolApp : App(MainView::class, Styles::class) {
             fitHeight = size.toDouble()
             fitWidth = size.toDouble()
         }
+
     }
 
+}
 
+object Cache {
+    val materials = FXCollections.observableArrayList<Material>()
 }

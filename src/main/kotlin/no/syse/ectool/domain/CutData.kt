@@ -1,10 +1,7 @@
 package no.syse.ectool.domain
 
-import javafx.beans.property.SimpleDoubleProperty
-import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
-import tornadofx.getValue
-import tornadofx.setValue
+import tornadofx.*
 
 class CutData {
     enum class Application(val id: Int) {
@@ -47,4 +44,15 @@ class CutData {
     }
 
 
+}
+
+class CutDataModel : ItemViewModel<CutData>() {
+    val id = bind(CutData::idProperty)
+    val application = bind(CutData::applicationProperty)
+    val tool = bind(CutData::toolProperty)
+    val material = bind(CutData::materialProperty)
+    val feedrate = bind(CutData::feedrateProperty)
+    val plungeFeedrate = bind(CutData::plungeFeedrateProperty)
+    val speed = bind(CutData::speedProperty)
+    val stepover = bind(CutData::stepoverProperty)
 }
