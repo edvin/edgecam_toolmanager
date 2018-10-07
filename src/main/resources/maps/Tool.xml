@@ -210,6 +210,9 @@
             <if test="!millTypes.isEmpty()">
                 AND t.TL_TOOL_TYPE_MILL_ID IN <foreach collection="millTypes" item="type" open="(" close=")" separator=",">#{type.id}</foreach>
             </if>
+            <if test="!holeTypes.isEmpty()">
+                AND t.TL_TOOL_TYPE_HOLE_ID IN <foreach collection="holeTypes" item="type" open="(" close=")" separator=",">#{type.id}</foreach>
+            </if>
         </where>
         ORDER BY TL_TOOL_DESCRIPTION
     </select>

@@ -63,9 +63,10 @@ class ToolList : Fragment() {
         center {
             tableview(tools) {
                 column("Description", Tool::descriptionProperty) {
+                    minWidth(300.0)
                     cellFormat {
                         text = it
-                        rowItem.millType?.let {
+                        rowItem.holeType?.let {
                             graphic = ToolApp.icon(it).apply {
                                 fitHeight = 16.0
                                 fitWidth = 16.0
@@ -105,19 +106,42 @@ class ToolList : Fragment() {
         bottom {
             hbox(3) {
                 addClass(Styles.toolbar)
-                Tool.MillType.values().forEach { millType ->
-                    val toggleGroup = ToggleGroup()
-                    togglebutton(millType.description, toggleGroup) {
-                        graphic = ToolApp.icon(millType)
-                        isSelected = millType == Tool.MillType.Endmill
 
-                        selectedProperty().onChange {
-                            if (it)
-                                query.millTypes.add(millType)
-                            else
-                                query.millTypes.remove(millType)
+                when (category) {
+                    Tool.Category.Milling -> {
+                        Tool.MillType.values().forEach { millType ->
+                            val toggleGroup = ToggleGroup()
+                            togglebutton(millType.description, toggleGroup) {
+                                graphic = ToolApp.icon(millType)
+                                isSelected = millType == Tool.MillType.Endmill
 
-                            onRefresh()
+                                selectedProperty().onChange {
+                                    if (it)
+                                        query.millTypes.add(millType)
+                                    else
+                                        query.millTypes.remove(millType)
+
+                                    onRefresh()
+                                }
+                            }
+                        }
+                    }
+                    Tool.Category.Hole -> {
+                        Tool.HoleType.values().forEach { holeType ->
+                            val toggleGroup = ToggleGroup()
+                            togglebutton(holeType.name, toggleGroup) {
+                                graphic = ToolApp.icon(holeType)
+                                isSelected = holeType == Tool.HoleType.Drill
+
+                                selectedProperty().onChange {
+                                    if (it)
+                                        query.holeTypes.add(holeType)
+                                    else
+                                        query.holeTypes.remove(holeType)
+
+                                    onRefresh()
+                                }
+                            }
                         }
                     }
                 }
@@ -125,14 +149,21 @@ class ToolList : Fragment() {
         }
     }
 
+
     private fun editTool(tool: Tool) {
         val model = ToolModel(tool)
         val editScope = Scope(model)
         find<MillToolMainEditor>(editScope).openWindow()
     }
 
-    override fun onDock() {
-        query.millTypes.add(Tool.MillType.Endmill)
+    override fun onTabSelected() {
+        // Select default
+        when (category) {
+            Tool.Category.Milling -> query.millTypes.add(Tool.MillType.Endmill)
+            Tool.Category.Hole -> query.holeTypes.add(Tool.HoleType.Drill)
+            Tool.Category.Probe -> {
+            }
+        }
         onRefresh()
         subscribe<ToolModifiedEvent> { onRefresh() }
     }

@@ -19,16 +19,16 @@ class Tool {
         Probe(3, "tool_type_probe.png", "Tool")
     }
 
-    enum class HoleType(val id: Int) {
-        Drill(0),
-        Ream(1),
-        Tap(2),
-        Bore(3),
-        Countersink(4),
-        CentreDrill(5),
-        SpotDrill(6),
-        BackBore(7),
-        FormedHole(8)
+    enum class HoleType(val id: Int, val iconName: String) {
+        Drill(0, "drill.png"),
+        Ream(1, "reamer.png"),
+        Tap(2, "tap.png"),
+        Bore(3, "bore_reach.png"),
+        BackBore(7, "back_bore.png"),
+        Countersink(4, "countersink.png"),
+        CentreDrill(5, "centre_drill.png"),
+        SpotDrill(6, "spot_drill.png"),
+        FormedHole(8, "small_diameter.png")
     }
 
     enum class MillType(val id: Int, val iconName: String, val description: String) {
@@ -301,4 +301,5 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
 class ToolQuery() {
     var category: Tool.Category? = null
     val millTypes = FXCollections.observableSet<Tool.MillType>()
+    val holeTypes = FXCollections.observableSet<Tool.HoleType>()
 }

@@ -1,9 +1,11 @@
 package no.syse.ectool.view
 
 import javafx.scene.control.ButtonBar
+import javafx.scene.image.ImageView
 import no.syse.ectool.app.Styles
 import no.syse.ectool.app.ToolApp
 import no.syse.ectool.controller.DBController
+import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
 import no.syse.ectool.events.ToolModifiedEvent
 import tornadofx.*
@@ -18,11 +20,16 @@ class MillToolMainEditor : Fragment() {
     }
 
     init {
-        titleProperty.bind(tool.description)
+        titleProperty.bind(tool.description.stringBinding { "${tool.category.value}: $it" })
     }
 
     override fun onDock() {
-        currentStage!!.icons.add(ToolApp.icon(tool.millType.value).image)
+        val icon = when (tool.category.value) {
+            Tool.Category.Milling -> ToolApp.icon(tool.millType.value)
+            Tool.Category.Hole -> ToolApp.icon(tool.holeType.value)
+            else -> ImageView()
+        }
+        currentStage!!.icons.add(icon.image)
     }
 
     override val root = borderpane {

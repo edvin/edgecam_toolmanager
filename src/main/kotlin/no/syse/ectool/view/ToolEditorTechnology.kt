@@ -1,15 +1,15 @@
 package no.syse.ectool.view
 
 import javafx.beans.property.SimpleObjectProperty
-import javafx.event.EventTarget
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
 import javafx.scene.Node
-import javafx.scene.control.*
+import javafx.scene.control.Spinner
+import javafx.scene.control.TextField
 import javafx.scene.image.Image
+import javafx.scene.layout.HBox
 import javafx.scene.paint.Color
 import javafx.util.converter.IntegerStringConverter
-import javafx.util.converter.NumberStringConverter
 import no.syse.ectool.app.ToolApp
 import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
@@ -20,21 +20,53 @@ class ToolEditorTechnology : Fragment("Technology") {
 
     private val helpImage = SimpleObjectProperty<Image>()
 
+    private val enableTipEditing = booleanBinding(tool, tool.millType, tool.holeType) {
+        listOf(Tool.MillType.FormMill, Tool.MillType.ThreadMill).contains(millType.value)
+                || holeType.value != null
+    }
+
+    private val enableCornerRadius = booleanBinding(tool, tool.millType, tool.holeType) {
+        millType.value != null
+    }
+
+    private val enableThreadPitch = booleanBinding(tool, tool.millType, tool.holeType) {
+        listOf(Tool.MillType.FormMill, Tool.MillType.ThreadMill).contains(millType.value)
+                || holeType.value == Tool.HoleType.Tap
+    }
+
     override val root = form {
         fieldset(labelPosition = Orientation.VERTICAL) {
             hbox(40) {
                 gridpane {
                     hgap = 30.0
                     row {
-                        field("Type") {
-                            combobox(tool.millType, Tool.MillType.values().toList()) {
-                                cellFormat(true) {
-                                    text = it.name
-                                    graphic = ToolApp.icon(it, 24)
+                        field("${tool.category.value} Type") {
+                            when (tool.category.value) {
+                                Tool.Category.Milling -> {
+                                    combobox(tool.millType, Tool.MillType.values().toList()) {
+                                        cellFormat(true) {
+                                            text = it.name
+                                            graphic = ToolApp.icon(it, 24)
+                                        }
+                                        helpIcon("Tool_type_mill.png")
+                                        requestFocus()
+                                    }
                                 }
-                                helpIcon("Tool_type_mill.png")
-                                requestFocus()
+                                Tool.Category.Hole -> {
+                                    combobox(tool.holeType, Tool.HoleType.values().toList()) {
+                                        cellFormat(true) {
+                                            text = it.name
+                                            graphic = ToolApp.icon(it, 24)
+                                        }
+                                        helpIcon("Tool_type_hole.png")
+                                        requestFocus()
+                                    }
+                                }
+                                Tool.Category.Probe -> {
+                                    label("")
+                                }
                             }
+
                         }
                         field("Flutes") {
                             spinner(1, 12, property = tool.teeth, enableScroll = true) {
@@ -110,11 +142,11 @@ class ToolEditorTechnology : Fragment("Technology") {
                             }
                             label(tool.mmOrInch)
                         }
-                        field("Gauge Z") {
-                            spinner(0, 300, property = tool.gaugeZ, enableScroll = true, amountToStepBy = 1) {
+                        field("Reach") {
+                            spinner(1.0, 200.0, property = tool.reach, enableScroll = true, amountToStepBy = 1.0) {
                                 isEditable = true
                                 prefWidth = 70.0
-                                helpIcon("mill_Z_gauge.png")
+                                helpIcon("reach.png")
                             }
                             label(tool.mmOrInch)
                         }
@@ -127,12 +159,13 @@ class ToolEditorTechnology : Fragment("Technology") {
                                 helpIcon("corner_radius.png")
                             }
                             label(tool.mmOrInch)
+                            enableWhen(enableCornerRadius)
                         }
-                        field("Reach") {
-                            spinner(1.0, 200.0, property = tool.reach, enableScroll = true, amountToStepBy = 1.0) {
+                        field("Gauge Z") {
+                            spinner(0, 300, property = tool.gaugeZ, enableScroll = true, amountToStepBy = 1) {
                                 isEditable = true
                                 prefWidth = 70.0
-                                helpIcon("reach.png")
+                                helpIcon("mill_Z_gauge.png")
                             }
                             label(tool.mmOrInch)
                         }
@@ -152,26 +185,24 @@ class ToolEditorTechnology : Fragment("Technology") {
                                 prefWidth = 70.0
                                 helpIcon("tip_angle.png")
                             }
-                            label("degrees")
+                            label("°")
+                            enableWhen(enableTipEditing)
                         }
                     }
                     row {
-                        field("Thread pitch") {
-                            spinner(0.0, 100.0, property = tool.threadPitch, enableScroll = true, amountToStepBy = 0.1) {
+                        field("Shank length") {
+                            spinner(1.0, 200.0, property = tool.shankLength, enableScroll = true, amountToStepBy = 1.0) {
                                 isEditable = true
                                 prefWidth = 70.0
-                                helpIcon("thread_pitch.png")
-                                val enable = booleanBinding(tool, tool.millType, tool.holeType) {
-                                    listOf(Tool.MillType.FormMill, Tool.MillType.ThreadMill).contains(millType.value)
-                                    || holeType == Tool.HoleType.Tap
-                                }
-                                enableWhen(enable)
+                                helpIcon("shank_definition_shank_length.png")
                             }
                             label(tool.mmOrInch)
                         }
                         field("Tip length") {
+                            (inputContainer as HBox).alignment = Pos.CENTER_LEFT
                             label(tool.tipLength)
                             label(tool.mmOrInch)
+                            enableWhen(enableTipEditing)
                         }
                     }
                     row {
@@ -183,13 +214,14 @@ class ToolEditorTechnology : Fragment("Technology") {
                             }
                             label(tool.mmOrInch)
                         }
-                        field("Shank length") {
-                            spinner(1.0, 200.0, property = tool.shankLength, enableScroll = true, amountToStepBy = 1.0) {
+                        field("Thread pitch") {
+                            spinner(0.0, 100.0, property = tool.threadPitch, enableScroll = true, amountToStepBy = 0.1) {
                                 isEditable = true
                                 prefWidth = 70.0
-                                helpIcon("shank_definition_shank_length.png")
+                                helpIcon("thread_pitch.png")
                             }
                             label(tool.mmOrInch)
+                            enableWhen(enableThreadPitch)
                         }
                     }
                 }

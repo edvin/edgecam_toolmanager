@@ -26,6 +26,7 @@ class ToolApp : App(MainView::class, Styles::class) {
         val iconBase = edgecamCandidates.sorted().findFirst().get().resolve("cam").resolve("illustrate")
 
         fun icon(millType: Tool.MillType, size: Int = 32) = icon(millType.iconName, size)
+        fun icon(holeType: Tool.HoleType, size: Int = 32) = icon(holeType.iconName, size)
         fun icon(category: Tool.Category, size: Int = 32) = icon(category.iconName, size, category.library)
 
         fun icon(name: String, size: Number = 32, library: String = "Tool") = ImageView(iconBase.resolve(library).resolve(name).toUri().toURL().toExternalForm()).apply {
