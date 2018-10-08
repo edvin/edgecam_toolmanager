@@ -1,10 +1,9 @@
 package no.syse.ectool.view
 
-import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
 import tornadofx.*
 
-class ToolEditorGeneral : Fragment("General") {
+class ToolEditorGeneral : View("General") {
     val tool: ToolModel by inject()
 
     override val root = form {
@@ -18,8 +17,8 @@ class ToolEditorGeneral : Fragment("General") {
             field("Item ID") {
                 textfield(tool.itemId)
             }
-            field("URL") {
-                textfield(tool.url)
+            field("Comment") {
+                textfield(tool.comment)
             }
         }
     }

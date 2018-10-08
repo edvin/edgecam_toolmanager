@@ -7,7 +7,7 @@ import no.syse.ectool.app.ToolApp
 import no.syse.ectool.controller.DBController
 import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
-import no.syse.ectool.events.ToolModifiedEvent
+import no.syse.ectool.events.ToolAddedEvent
 import tornadofx.*
 import kotlin.reflect.KClass
 
@@ -57,11 +57,20 @@ class MillToolMainEditor : Fragment() {
                     addClass(Styles.OK)
                     action {
                         tool.commit {
+                            val isNew = tool.id.value == null || tool.id.value == 0
                             runAsync {
                                 db.saveTool(tool.item)
+
+                                // Commit cut data being edited
+                                find<ToolEditorFeedsAndSpeeds>().commitCutData()
+
+                                tool.modifiedCutData.forEach {
+                                    db.saveCutData(it)
+                                }
                             } ui {
                                 close()
-                                fire(ToolModifiedEvent)
+                                if (isNew)
+                                    fire(ToolAddedEvent(tool.item))
                             }
                         }
                     }
@@ -69,10 +78,12 @@ class MillToolMainEditor : Fragment() {
                 button("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE) {
                     addClass(Styles.Cancel)
                     action {
+                        tool.rollback()
                         close()
                     }
                 }
             }
         }
     }
+
 }

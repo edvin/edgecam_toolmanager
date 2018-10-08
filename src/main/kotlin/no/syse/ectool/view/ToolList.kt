@@ -10,7 +10,7 @@ import no.syse.ectool.controller.DBController
 import no.syse.ectool.domain.Tool
 import no.syse.ectool.domain.ToolModel
 import no.syse.ectool.domain.ToolQuery
-import no.syse.ectool.events.ToolModifiedEvent
+import no.syse.ectool.events.ToolAddedEvent
 import org.controlsfx.control.textfield.TextFields
 import tornadofx.*
 
@@ -166,7 +166,7 @@ class ToolList : Fragment() {
             }
         }
         onRefresh()
-        subscribe<ToolModifiedEvent> { onRefresh() }
+        subscribe<ToolAddedEvent> { onRefresh() }
     }
 
     override fun onRefresh() {

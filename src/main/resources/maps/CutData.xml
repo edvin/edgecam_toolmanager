@@ -9,6 +9,7 @@
         <result column="TL_TOOL_ID" property="tool.id"/>
         <result column="TCD_TOOL_DESC" property="tool.description"/>
         <result column="TCD_APPLICATION_TYPE_ID" property="applicationId"/>
+        <result column="MAT_MATERIAL_ID" property="material.id"/>
         <result column="TCD_MATERIAL_DESC" property="material.description"/>
         <result column="TCD_FEEDRATE" property="feedrate"/>
         <result column="TCD_PLUNGE_FEED" property="plungeFeedrate"/>
@@ -17,9 +18,11 @@
     </resultMap>
 
     <select id="listByTool" resultMap="CutData" parameterType="Tool">
-      select TS_TOOL_CUT_DATA.*, TS_TOOL.TL_TOOL_ID from TS_TOOL_CUT_DATA, TS_TOOL
-      where TS_TOOL_CUT_DATA.TCD_TOOL_DESC = #{description}
-      and TS_TOOL.TL_TOOL_DESCRIPTION = TS_TOOL_CUT_DATA.TCD_TOOL_DESC
+      SELECT TS_TOOL_CUT_DATA.*, TS_TOOL.TL_TOOL_ID, TS_MATERIAL.MAT_MATERIAL_ID
+      FROM TS_TOOL_CUT_DATA, TS_TOOL, TS_MATERIAL
+      WHERE TS_TOOL_CUT_DATA.TCD_TOOL_DESC = #{description}
+      AND TS_TOOL.TL_TOOL_DESCRIPTION = TS_TOOL_CUT_DATA.TCD_TOOL_DESC
+      AND TS_TOOL_CUT_DATA.TCD_MATERIAL_DESC = TS_MATERIAL.MAT_MATERIAL_DESCRIPTION
     </select>
 
     <update id="update" parameterType="CutData">

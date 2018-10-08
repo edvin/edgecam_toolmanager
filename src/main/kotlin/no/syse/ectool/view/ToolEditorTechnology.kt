@@ -3,9 +3,6 @@ package no.syse.ectool.view
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
-import javafx.scene.Node
-import javafx.scene.control.Spinner
-import javafx.scene.control.TextField
 import javafx.scene.image.Image
 import javafx.scene.layout.HBox
 import javafx.scene.paint.Color
@@ -16,7 +13,7 @@ import no.syse.ectool.domain.ToolModel
 import tornadofx.*
 
 
-class ToolEditorTechnology : Fragment("Technology") {
+class ToolEditorTechnology : View("Technology") {
     val tool: ToolModel by inject()
 
     private val helpImage = SimpleObjectProperty<Image>()
@@ -46,10 +43,10 @@ class ToolEditorTechnology : Fragment("Technology") {
                                 Tool.Category.Milling -> {
                                     combobox(tool.millType, Tool.MillType.values().toList()) {
                                         cellFormat(true) {
-                                            text = it.name
+                                            text = it.description
                                             graphic = ToolApp.icon(it, 24)
                                         }
-                                        helpIcon("Tool_type_mill.png")
+                                        enhanceAndHelp(helpImage, "Tool_type_mill.png")
                                         requestFocus()
                                     }
                                 }
@@ -59,7 +56,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                                             text = it.name
                                             graphic = ToolApp.icon(it, 24)
                                         }
-                                        helpIcon("Tool_type_hole.png")
+                                        enhanceAndHelp(helpImage, "Tool_type_hole.png")
                                         requestFocus()
                                     }
                                 }
@@ -73,45 +70,45 @@ class ToolEditorTechnology : Fragment("Technology") {
                             spinner(1, 12, property = tool.teeth, enableScroll = true) {
                                 isEditable = true
                                 prefWidth = 70.0
-                                helpIcon("number_of_teeth.png")
+                                enhanceAndHelp(helpImage, "number_of_teeth.png")
                             }
                         }
                         field("Roughing") {
                             checkbox(property = tool.roughing) {
-                                helpIcon("roughing_tool.png")
+                                enhanceAndHelp(helpImage, "roughing_tool.png")
                             }
                         }
                         field("Finishing") {
                             checkbox(property = tool.finishing) {
-                                helpIcon("finishing_tool.png")
+                                enhanceAndHelp(helpImage, "finishing_tool.png")
                             }
                         }
                     }
                     row {
                         field("Units") {
                             combobox(tool.units, Tool.Units.values().toList()) {
-                                helpIcon("blank.png")
+                                enhanceAndHelp(helpImage, "blank.png")
                             }
                         }
                         field("Coolant") {
                             checkbox(property = tool.coolant) {
-                                helpIcon("coolant_flood.png")
+                                enhanceAndHelp(helpImage, "coolant_flood.png")
                             }
                         }
                         field("ATC pos / Offset") {
                             spinner(1, 12, property = tool.turretPosition, enableScroll = true, amountToStepBy = 1) {
                                 isEditable = true
                                 prefWidth = 70.0
-                                helpIcon("code_id.png")
+                                enhanceAndHelp(helpImage, "code_id.png")
                             }
                             textfield(tool.offset, IntegerStringConverter()) {
                                 prefColumnCount = 2
-                                helpIcon("mill_offset.png")
+                                enhanceAndHelp(helpImage, "mill_offset.png")
                             }
                         }
                         field("Centre cutting") {
                             checkbox(property = tool.centreCutting) {
-                                helpIcon("centre_cutting_tool.png", "Mill")
+                                enhanceAndHelp(helpImage, "centre_cutting_tool.png", "Mill")
                             }
                         }
                     }
@@ -137,7 +134,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(0.0, 120.0, property = tool.diameter, enableScroll = true, amountToStepBy = 1.0) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("diameter.png")
+                            enhanceAndHelp(helpImage, "diameter.png")
 
                         }
                         label(tool.mmOrInch)
@@ -146,7 +143,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(0.0, 5.0, property = tool.cornerRadius, enableScroll = true, amountToStepBy = 0.1) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("corner_radius.png")
+                            enhanceAndHelp(helpImage, "corner_radius.png")
                         }
                         label(tool.mmOrInch)
                         enableWhen(enableCornerRadius)
@@ -155,7 +152,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(1.0, 200.0, property = tool.fluteLength, enableScroll = true, amountToStepBy = 1.0) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("flute_length.png")
+                            enhanceAndHelp(helpImage, "flute_length.png")
                         }
                         label(tool.mmOrInch)
                     }
@@ -163,7 +160,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(1.0, 200.0, property = tool.shankLength, enableScroll = true, amountToStepBy = 1.0) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("shank_definition_shank_length.png")
+                            enhanceAndHelp(helpImage, "shank_definition_shank_length.png")
                         }
                         label(tool.mmOrInch)
                     }
@@ -171,7 +168,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(1.0, 120.0, property = tool.shankWidth, enableScroll = true, amountToStepBy = 1.0) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("shank_definition_diameter.png")
+                            enhanceAndHelp(helpImage, "shank_definition_diameter.png")
                         }
                         label(tool.mmOrInch)
                     }
@@ -181,7 +178,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(1.0, 200.0, property = tool.reach, enableScroll = true, amountToStepBy = 1.0) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("reach.png")
+                            enhanceAndHelp(helpImage, "reach.png")
                         }
                         label(tool.mmOrInch)
                     }
@@ -189,7 +186,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(0, 300, property = tool.gaugeZ, enableScroll = true, amountToStepBy = 1) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("mill_Z_gauge.png")
+                            enhanceAndHelp(helpImage, "mill_Z_gauge.png")
                         }
                         label(tool.mmOrInch)
                     }
@@ -197,7 +194,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(0.0, 180.0, property = tool.tipAngle, enableScroll = true, amountToStepBy = 1.0) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("tip_angle.png")
+                            enhanceAndHelp(helpImage, "tip_angle.png")
                         }
                         label("°")
                         enableWhen(enableTipEditing)
@@ -212,7 +209,7 @@ class ToolEditorTechnology : Fragment("Technology") {
                         spinner(0.0, 100.0, property = tool.threadPitch, enableScroll = true, amountToStepBy = 0.1) {
                             isEditable = true
                             prefWidth = 70.0
-                            helpIcon("thread_pitch.png")
+                            enhanceAndHelp(helpImage, "thread_pitch.png")
                         }
                         label(tool.mmOrInch)
                         enableWhen(enableThreadPitch)
@@ -235,40 +232,4 @@ class ToolEditorTechnology : Fragment("Technology") {
         }
     }
 
-    private fun Node.helpIcon(iconName: String, library: String = "Tool") {
-        // Trigger help icon and select text on focus
-        focusedProperty().onChange { focused ->
-            if (focused) {
-                helpImage.value = ToolApp.icon(iconName, 32, library).image
-                (this as? TextField)?.selectAll()
-                // Spinner needs a little extra push
-                (this as? Spinner<*>)?.let {
-                    runLater {
-                        it.editor?.selectAll()
-                    }
-                }
-            }
-        }
-
-        // Make the spinner commit it's value on manual edit
-        (this as? Spinner<*>)?.editor?.textProperty()?.onChange { commitEditorText(this) }
-
-        // Focus follows mouse
-        setOnMouseEntered {
-            requestFocus()
-        }
-    }
-
-    private fun <T> commitEditorText(spinner: Spinner<T>) {
-        if (!spinner.isEditable) return
-        val text = spinner.editor.text
-        val valueFactory = spinner.valueFactory
-        if (valueFactory != null) {
-            val converter = valueFactory.converter
-            if (converter != null) {
-                val value = converter.fromString(text)
-                valueFactory.value = value
-            }
-        }
-    }
 }

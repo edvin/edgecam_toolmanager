@@ -20,10 +20,21 @@ class Material {
 
     override fun toString() = description
 
-    object Converter : StringConverter<Material>() {
-        override fun toString(material: Material?) = material?.description
-        override fun fromString(string: String?) = Material().apply { description = string }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Material
+
+        if (id != other.id) return false
+
+        return true
     }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
 }
 
 class MaterialModel : ItemViewModel<Material>() {

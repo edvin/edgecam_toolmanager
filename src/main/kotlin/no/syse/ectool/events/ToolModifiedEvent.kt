@@ -1,5 +1,6 @@
 package no.syse.ectool.events
 
+import no.syse.ectool.domain.Tool
 import tornadofx.*
 
-object ToolModifiedEvent : FXEvent()
+class ToolAddedEvent(val tool: Tool) : FXEvent()

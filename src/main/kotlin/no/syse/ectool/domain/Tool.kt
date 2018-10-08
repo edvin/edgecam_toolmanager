@@ -40,7 +40,7 @@ class Tool {
         Facemill(5, "face_mill.png", "Facemill"),
         TSlot(6, "T_slot.png", "T-Slot"),
         Lollipop(7, "lollipop.png", "Lollipop"),
-        ThreadMill(8, "tap.png", "Threadmill"),
+        ThreadMill(8, "tap.png", "Thread Mill"),
         FormMill(9, "small_diameter.png", "Formed Mill")
     }
 
@@ -124,13 +124,12 @@ class Tool {
     val itemIdProperty = SimpleStringProperty()
     var itemId by itemIdProperty
 
-    val urlProperty = SimpleStringProperty()
-    var url by urlProperty
-
     val commentProperty = SimpleStringProperty()
     var comment by commentProperty
 
     val mmOrInch = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "\"" else "mm" }
+    val mmOrInchMin = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "\"/min" else "mm/min" }
+    val mmOrInchTooth = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "\"/tooth" else "mm/tooth" }
     val smmOrSfm = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "f/min" else "m/min" }
 
     fun setRoughingInt(i: Int?) {
@@ -176,11 +175,13 @@ class Tool {
     fun getMillTypeById() = millType?.id
 
     override fun toString(): String {
-        return "Tool(id=$id, description=$description, category=$category, holeType=$holeType, millType=$millType, units=$units, turretPosition=$turretPosition, gaugeZ=$gaugeZ, zoffset=$zoffset, reach=$reach, roughing=$roughing, finishing=$finishing, coolant=$coolant, offset=$offset, teeth=$teeth, diameter=$diameter, cornerRadius=$cornerRadius, fluteLength=$fluteLength, threadPitch=$threadPitch, tipAngle=$tipAngle, shankLength=$shankLength, shankWidth=$shankWidth, manufacturer=$manufacturer, itemId=$itemId, url=$url, comment=$comment)"
+        return "Tool(id=$id, description=$description, category=$category, holeType=$holeType, millType=$millType, units=$units, turretPosition=$turretPosition, gaugeZ=$gaugeZ, zoffset=$zoffset, reach=$reach, roughing=$roughing, finishing=$finishing, coolant=$coolant, offset=$offset, teeth=$teeth, diameter=$diameter, cornerRadius=$cornerRadius, fluteLength=$fluteLength, threadPitch=$threadPitch, tipAngle=$tipAngle, shankLength=$shankLength, shankWidth=$shankWidth, manufacturer=$manufacturer, itemId=$itemId, comment=$comment)"
     }
 }
 
 class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
+    val modifiedCutData = FXCollections.observableArrayList<CutData>()
+
     val id = bind(Tool::idProperty)
     val description = bind(Tool::descriptionProperty)
     val category = bind(Tool::categoryProperty)
@@ -207,7 +208,6 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
     val shankWidth = bind(Tool::shankWidthProperty)
     val manufacturer = bind(Tool::manufacturerProperty)
     val itemId = bind(Tool::itemIdProperty)
-    val url = bind(Tool::urlProperty)
     val comment = bind(Tool::commentProperty)
     val mmOrInch = select { it.mmOrInch }
     val smmOrSfm = select { it.smmOrSfm }
@@ -288,6 +288,9 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
         scaleX = scaleFactor
         scaleY = scaleFactor
     }
+
+    fun hasModifiedCutDataFor(cutData: CutData): Boolean =
+        modifiedCutData.any { it.material == cutData.material && it.application == cutData.application }
 }
 
 class ToolQuery() {
