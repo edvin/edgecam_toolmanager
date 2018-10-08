@@ -131,6 +131,7 @@ class Tool {
     var comment by commentProperty
 
     val mmOrInch = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "\"" else "mm" }
+    val smmOrSfm = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "f/min" else "m/min" }
 
     fun setRoughingInt(i: Int?) {
         roughing = i == 1
@@ -185,7 +186,7 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
     val category = bind(Tool::categoryProperty)
     val holeType = bind(Tool::holeTypeProperty)
     val millType = bind(Tool::millTypeProperty)
-    // Reflect changes to mmOrInch directly
+    // Reflect changes to mmOrInch/smmOrSfm directly
     val units = bind(Tool::unitsProperty, autocommit = true)
     val turretPosition = bind(Tool::turretPositionProperty)
     val gaugeZ = bind(Tool::gaugeZProperty)
@@ -209,26 +210,17 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
     val url = bind(Tool::urlProperty)
     val comment = bind(Tool::commentProperty)
     val mmOrInch = select { it.mmOrInch }
+    val smmOrSfm = select { it.smmOrSfm }
 
     val tipLength = doubleBinding(tipAngle, diameter) {
         val angle = (tipAngle.value ?: 0.0).toDouble()
         if (angle > 0) {
             val d = diameter.value?.toDouble() ?: 0.0
             val radius: Double = d / 2.0
-            round(radius / Math.tan(Math.toRadians(angle)), 3)
+            roundDouble(radius / Math.tan(Math.toRadians(angle)), 3)
         } else {
             0.0
         }
-    }
-
-    private fun round(value: Double, places: Int): Double {
-        var v = value
-        if (places < 0) throw IllegalArgumentException()
-
-        val factor = Math.pow(10.0, places.toDouble()).toLong()
-        v = v * factor
-        val tmp = Math.round(v)
-        return tmp.toDouble() / factor
     }
 
     val toolGraphics = objectBinding(this, diameter, fluteLength, shankLength, shankWidth, tipAngle) {
@@ -302,4 +294,14 @@ class ToolQuery() {
     var category: Tool.Category? = null
     val millTypes = FXCollections.observableSet<Tool.MillType>()
     val holeTypes = FXCollections.observableSet<Tool.HoleType>()
+}
+
+fun roundDouble(value: Double, places: Int): Double {
+    var v = value
+    if (places < 0) throw IllegalArgumentException()
+
+    val factor = Math.pow(10.0, places.toDouble()).toLong()
+    v = v * factor
+    val tmp = Math.round(v)
+    return tmp.toDouble() / factor
 }

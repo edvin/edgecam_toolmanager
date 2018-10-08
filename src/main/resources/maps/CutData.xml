@@ -6,6 +6,7 @@
 
     <resultMap id="CutData" type="CutData">
         <result column="TCD_TOOL_CUT_DATA_ID" property="id"/>
+        <result column="TL_TOOL_ID" property="tool.id"/>
         <result column="TCD_TOOL_DESC" property="tool.description"/>
         <result column="TCD_APPLICATION_TYPE_ID" property="applicationId"/>
         <result column="TCD_MATERIAL_DESC" property="material.description"/>
@@ -16,7 +17,9 @@
     </resultMap>
 
     <select id="listByTool" resultMap="CutData" parameterType="Tool">
-      select * from TS_TOOL_CUT_DATA where TCD_TOOL_DESC = #{description}
+      select TS_TOOL_CUT_DATA.*, TS_TOOL.TL_TOOL_ID from TS_TOOL_CUT_DATA, TS_TOOL
+      where TS_TOOL_CUT_DATA.TCD_TOOL_DESC = #{description}
+      and TS_TOOL.TL_TOOL_DESCRIPTION = TS_TOOL_CUT_DATA.TCD_TOOL_DESC
     </select>
 
     <update id="update" parameterType="CutData">

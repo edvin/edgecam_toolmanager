@@ -2,6 +2,7 @@ package no.syse.ectool.domain
 
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.util.StringConverter
 import tornadofx.*
 
 class Material {
@@ -18,6 +19,11 @@ class Material {
     var family by familyProperty
 
     override fun toString() = description
+
+    object Converter : StringConverter<Material>() {
+        override fun toString(material: Material?) = material?.description
+        override fun fromString(string: String?) = Material().apply { description = string }
+    }
 }
 
 class MaterialModel : ItemViewModel<Material>() {

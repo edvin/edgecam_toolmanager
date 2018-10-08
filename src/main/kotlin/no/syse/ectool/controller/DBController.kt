@@ -71,7 +71,6 @@ class DBController : Controller() {
     }
 
     fun listCutDataForTool(tool: Tool) = list<CutData>("CutData.listByTool", tool)
-
     fun listTools(query: ToolQuery) = list<Tool>("Tool.tools", query)
     fun listMaterials() = list<Material>("Material.materials")
 
