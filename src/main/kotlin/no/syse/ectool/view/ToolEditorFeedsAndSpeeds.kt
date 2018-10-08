@@ -7,6 +7,7 @@ import javafx.geometry.Pos
 import javafx.scene.control.Spinner
 import javafx.scene.image.Image
 import javafx.scene.layout.Priority
+import javafx.scene.paint.Color
 import javafx.util.converter.NumberStringConverter
 import no.syse.ectool.app.Cache
 import no.syse.ectool.controller.DBController
@@ -74,20 +75,32 @@ class ToolEditorFeedsAndSpeeds : View("Feeds and Speeds") {
 
     override val root = borderpane {
         top {
-            hbox {
-                form {
-                    fieldset {
-                        field("Material") {
-                            combobox(currentMaterial, Cache.materials)
+            vbox {
+                hbox {
+                    paddingBottom = 10
+                    form {
+                        hgrow = Priority.ALWAYS
+                        fieldset {
+                            field("Material") {
+                                combobox(currentMaterial, Cache.materials) {
+                                    enhanceAndHelp(helpImage, "modifier_select_stock.jpg", ".")
+                                    runLater { requestFocus() }
+                                }
+                            }
                         }
                     }
-                    hgrow = Priority.ALWAYS
+                    imageview(helpImage) {
+                        padding = insets(5, 10, 0, 40)
+                        alignment = Pos.CENTER_RIGHT
+                        fitHeight = 128.0
+                        fitWidth = 128.0
+                    }
                 }
-                imageview(helpImage) {
-                    padding = insets(5, 5, 0, 0)
-                    alignment = Pos.TOP_RIGHT
-                    fitHeight = 128.0
-                    fitWidth = 128.0
+                pane {
+                    style {
+                        borderWidth += box(1.px)
+                        borderColor += box(Color.TRANSPARENT, Color.TRANSPARENT, Color.BLACK, Color.TRANSPARENT)
+                    }
                 }
             }
         }
@@ -177,7 +190,7 @@ class SpeedForm : View() {
                 label(cutData.toolModel!!.item.mmOrInchTooth)
             }
             field("Stepover") {
-                spinner(0.0, 200.0, property = cutData.stepover, amountToStepBy = 0.01, enableScroll = true) {
+                spinner(0.0, 200.0, property = cutData.stepover, amountToStepBy = 0.1, enableScroll = true) {
                     isEditable = true
                     defaultSize()
                     enhanceAndHelp(helpImage, "stepover.png", "Mill")
@@ -188,9 +201,9 @@ class SpeedForm : View() {
                 spinner(0.0, 48000.0, property = cutData.plungeFeedrate, amountToStepBy = 50, enableScroll = true) {
                     isEditable = true
                     defaultSize()
+                    enhanceAndHelp(helpImage, "Plunge_feedrate.png", "Mill")
                 }
                 label(cutData.toolModel!!.item.mmOrInchMin)
-                enhanceAndHelp(helpImage, "Plunge_feedrate.png", "Mill")
             }
         }
     }

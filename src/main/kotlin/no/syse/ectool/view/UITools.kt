@@ -41,7 +41,8 @@ fun <T> commitEditorText(spinner: Spinner<T>) {
         val converter = valueFactory.converter
         if (converter != null) {
             val value = converter.fromString(text)
-            valueFactory.value = value
+            if (value != null)
+                valueFactory.value = value
         }
     }
 }

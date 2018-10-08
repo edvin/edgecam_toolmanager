@@ -63,7 +63,7 @@ class DBController : Controller() {
 
     fun saveCutData(cutData: CutData) {
         session {
-            if (update("CutData.update", cutData) == 0)
+            if (cutData.id == 0 || update("CutData.update", cutData) == 0)
                 insert("CutData.insert", cutData)
 
             commit()

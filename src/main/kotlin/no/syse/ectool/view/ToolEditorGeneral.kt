@@ -17,9 +17,6 @@ class ToolEditorGeneral : View("General") {
             field("Item ID") {
                 textfield(tool.itemId)
             }
-            field("Comment") {
-                textfield(tool.comment)
-            }
         }
     }
 }

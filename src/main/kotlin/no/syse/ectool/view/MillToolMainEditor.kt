@@ -33,7 +33,7 @@ class MillToolMainEditor : Fragment() {
     }
 
     override val root = borderpane {
-        setPrefSize(700.0, 480.0)
+        setPrefSize(730.0, 500.0)
         center {
             tabpane {
                 tab<ToolEditorGeneral>()

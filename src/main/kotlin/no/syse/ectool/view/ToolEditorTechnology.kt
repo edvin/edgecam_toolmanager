@@ -42,6 +42,7 @@ class ToolEditorTechnology : View("Technology") {
                             when (tool.category.value) {
                                 Tool.Category.Milling -> {
                                     combobox(tool.millType, Tool.MillType.values().toList()) {
+                                        prefWidth = 160.0
                                         cellFormat(true) {
                                             text = it.description
                                             graphic = ToolApp.icon(it, 24)
@@ -52,6 +53,7 @@ class ToolEditorTechnology : View("Technology") {
                                 }
                                 Tool.Category.Hole -> {
                                     combobox(tool.holeType, Tool.HoleType.values().toList()) {
+                                        prefWidth = 160.0
                                         cellFormat(true) {
                                             text = it.name
                                             graphic = ToolApp.icon(it, 24)
@@ -61,7 +63,10 @@ class ToolEditorTechnology : View("Technology") {
                                     }
                                 }
                                 Tool.Category.Probe -> {
-                                    label("")
+                                    label("Not implemented")
+                                }
+                                Tool.Category.Turning -> {
+                                    label("Not implemented")
                                 }
                             }
 
@@ -172,6 +177,14 @@ class ToolEditorTechnology : View("Technology") {
                         }
                         label(tool.mmOrInch)
                     }
+                    field("Max plunge depth") {
+                        spinner(1.0, 1000.0, property = tool.maxPlungeDepth, enableScroll = true, amountToStepBy = 1.0) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            enhanceAndHelp(helpImage, "maximum_plunge_depth.png", "Mill")
+                        }
+                        label(tool.mmOrInch)
+                    }
                 }
                 vbox {
                     field("Reach") {
@@ -213,6 +226,14 @@ class ToolEditorTechnology : View("Technology") {
                         }
                         label(tool.mmOrInch)
                         enableWhen(enableThreadPitch)
+                    }
+                    field("Ramp angle") {
+                        spinner(1.0, 180.0, property = tool.rampAngle, enableScroll = true, amountToStepBy = 1.0) {
+                            isEditable = true
+                            prefWidth = 70.0
+                            enhanceAndHelp(helpImage, "ramp_angle.png", "Mill")
+                        }
+                        label("°")
                     }
                 }
                 stackpane {

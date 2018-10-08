@@ -10,6 +10,8 @@ import javafx.scene.paint.CycleMethod
 import javafx.scene.paint.LinearGradient
 import javafx.scene.paint.Stop
 import tornadofx.*
+import tornadofx.getValue
+import tornadofx.setValue
 
 class Tool {
     enum class Category(val id: Int, val iconName: String, val library: String) {
@@ -118,14 +120,17 @@ class Tool {
     val shankWidthProperty = SimpleDoubleProperty()
     var shankWidth by shankWidthProperty
 
+    val maxPlungeDepthProperty = SimpleDoubleProperty()
+    var maxPlungeDepth by maxPlungeDepthProperty
+
+    val rampAngleProperty = SimpleDoubleProperty()
+    var rampAngle by rampAngleProperty
+
     val manufacturerProperty = SimpleStringProperty()
     var manufacturer by manufacturerProperty
 
     val itemIdProperty = SimpleStringProperty()
     var itemId by itemIdProperty
-
-    val commentProperty = SimpleStringProperty()
-    var comment by commentProperty
 
     val mmOrInch = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "\"" else "mm" }
     val mmOrInchMin = unitsProperty.stringBinding { if (it == Tool.Units.Inches) "\"/min" else "mm/min" }
@@ -175,7 +180,7 @@ class Tool {
     fun getMillTypeById() = millType?.id
 
     override fun toString(): String {
-        return "Tool(id=$id, description=$description, category=$category, holeType=$holeType, millType=$millType, units=$units, turretPosition=$turretPosition, gaugeZ=$gaugeZ, zoffset=$zoffset, reach=$reach, roughing=$roughing, finishing=$finishing, coolant=$coolant, offset=$offset, teeth=$teeth, diameter=$diameter, cornerRadius=$cornerRadius, fluteLength=$fluteLength, threadPitch=$threadPitch, tipAngle=$tipAngle, shankLength=$shankLength, shankWidth=$shankWidth, manufacturer=$manufacturer, itemId=$itemId, comment=$comment)"
+        return "Tool(id=$id, description=$description, category=$category, holeType=$holeType, millType=$millType, units=$units, turretPosition=$turretPosition, gaugeZ=$gaugeZ, zoffset=$zoffset, reach=$reach, roughing=$roughing, finishing=$finishing, coolant=$coolant, offset=$offset, teeth=$teeth, diameter=$diameter, cornerRadius=$cornerRadius, fluteLength=$fluteLength, threadPitch=$threadPitch, tipAngle=$tipAngle, shankLength=$shankLength, shankWidth=$shankWidth, manufacturer=$manufacturer, itemId=$itemId)"
     }
 }
 
@@ -208,7 +213,8 @@ class ToolModel(tool: Tool? = null) : ItemViewModel<Tool>(tool) {
     val shankWidth = bind(Tool::shankWidthProperty)
     val manufacturer = bind(Tool::manufacturerProperty)
     val itemId = bind(Tool::itemIdProperty)
-    val comment = bind(Tool::commentProperty)
+    val maxPlungeDepth = bind(Tool::maxPlungeDepthProperty)
+    val rampAngle = bind(Tool::rampAngleProperty)
     val mmOrInch = select { it.mmOrInch }
     val smmOrSfm = select { it.smmOrSfm }
 

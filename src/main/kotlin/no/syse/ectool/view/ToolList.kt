@@ -92,7 +92,6 @@ class ToolList : Fragment() {
                 }
                 column("Manufacturer", Tool::manufacturerProperty)
                 column("Item ID", Tool::itemIdProperty)
-                column("Comment", Tool::commentProperty)
 
                 onUserSelect {
                     editTool(it)

@@ -19,9 +19,10 @@
         <result column="TL_TIP_ANGLE" property="tipAngle"/>
         <result column="TL_SHANK_LENGTH" property="shankLength"/>
         <result column="TL_SHANK_WIDTH" property="shankWidth"/>
+        <result column="TL_RAMP_ANGLE" property="rampAngle"/>
+        <result column="TL_MAX_PLUNGE_DEPTH" property="maxPlungeDepth"/>
         <result column="TL_USER1" property="manufacturer"/>
         <result column="TL_USER2" property="itemId"/>
-        <result column="TL_USER4" property="comment"/>
         <result column="MNT_TURRET_POSITION" property="turretPosition"/>
         <result column="MNT_GAUGE_Z" property="gaugeZ"/>
         <result column="MNT_Z_OFFSET" property="zoffset"/>
@@ -141,7 +142,8 @@
         TL_SHANK_WIDTH = #{shankWidth},
         TL_USER1 = #{manufacturer},
         TL_USER2 = #{itemId},
-        TL_USER4 = #{comment}
+        TL_MAX_PLUNGE_DEPTH = #{maxPlungeDepth},
+        TL_RAMP_ANGLE = #{rampAngle}
         WHERE TL_TOOL_ID = #{id}
     </update>
 
@@ -163,8 +165,9 @@
             TL_SHANK_WIDTH,
             TL_USER1,
             TL_USER2,
-            TL_USER4,
-            TL_CENTRE_CUTTING)
+            TL_CENTRE_CUTTING,
+            TL_MAX_PLUNGE_DEPTH,
+            TL_RAMP_ANGLE)
         VALUES (
             null,
             #{description},
@@ -182,8 +185,9 @@
             #{shankWidth},
             #{manufacturer},
             #{itemId},
-            #{comment},
-            #{centreCutting}
+            #{centreCutting},
+            #{maxPlungeDepth},
+            #{rampAngle}
         )
     </update>
 
