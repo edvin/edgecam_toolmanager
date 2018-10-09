@@ -72,6 +72,12 @@ class ToolList : Fragment() {
                                 fitWidth = 16.0
                             }
                         }
+                        rowItem.millType?.let {
+                            graphic = ToolApp.icon(it).apply {
+                                fitHeight = 16.0
+                                fitWidth = 16.0
+                            }
+                        }
                     }
                 }
                 column("Diameter", Tool::diameterProperty).cellFormat {

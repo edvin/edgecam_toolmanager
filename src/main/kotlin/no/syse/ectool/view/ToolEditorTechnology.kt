@@ -214,7 +214,9 @@ class ToolEditorTechnology : View("Technology") {
                     }
                     field("Tip length") {
                         (inputContainer as HBox).alignment = Pos.CENTER_LEFT
-                        label(tool.tipLength)
+                        label(tool.tipLength) {
+                            prefHeight = 27.0
+                        }
                         label(tool.mmOrInch)
                         enableWhen(enableTipEditing)
                     }

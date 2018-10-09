@@ -4,7 +4,7 @@ import no.syse.ectool.app.Styles
 import no.syse.ectool.domain.Tool
 import tornadofx.*
 
-class MainView : View("EdgeCam Tool Database Manager") {
+class MainView : View("Edgecam Tool Manager") {
     override val root = borderpane {
         setPrefSize(1024.0, 768.0)
         center {
